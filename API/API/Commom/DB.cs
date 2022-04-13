@@ -87,7 +87,7 @@ namespace API
                         break;
                     case "POSTGRESQL":
                         ConnString = "Server=" + this.HOST + ";Port=" + this.DBPORT + ";User Id=" + this.USER + ";Password=" + this.PASS + ";Database=" + this.DBNAME + ";";
-                        AssemblyFile = Diretorio + "Npgsql.dll";
+                        AssemblyFile = Diretorio + "/Npgsql.dll";
                         AssemblyInstance = "Npgsql.NpgsqlConnection";//System.Data.SqlClient.SqlClientFactory
                         break;
                     default:
