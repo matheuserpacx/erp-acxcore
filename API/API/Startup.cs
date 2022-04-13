@@ -49,7 +49,7 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 //endpoints.MapHealthChecks("/healthz").RequireAuthorization();
-                endpoints.MapControllers();
+                //endpoints.MapControllers();
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
