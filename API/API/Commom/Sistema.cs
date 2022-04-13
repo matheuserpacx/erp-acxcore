@@ -20,7 +20,7 @@ namespace API
             {
                 DB Conn = new DB();
                 var Diretorio = Sistema.RootPath();
-                String config = Diretorio + "/Config.ini";
+                String config = Diretorio + "DBConfig.ini";
                 Array ini = File.ReadAllLines(config);
                 String valor = "";
                 String campo = "";

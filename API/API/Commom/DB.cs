@@ -68,7 +68,6 @@ namespace API
                 }
 
                 var Diretorio = Sistema.RootPath();
-
                 switch (this.DATABASE.ToUpper())
                 {
                     case "MYSQL":
@@ -88,7 +87,7 @@ namespace API
                         break;
                     case "POSTGRESQL":
                         ConnString = "Server=" + this.HOST + ";Port=" + this.DBPORT + ";User Id=" + this.USER + ";Password=" + this.PASS + ";Database=" + this.DBNAME + ";";
-                        AssemblyFile = Diretorio + "/Npgsql.dll";
+                        AssemblyFile = Diretorio + "Assembly/Npgsql.dll";
                         AssemblyInstance = "Npgsql.NpgsqlConnection";//System.Data.SqlClient.SqlClientFactory
                         break;
                     default:
@@ -175,10 +174,10 @@ namespace API
                         AssemblyFile = Diretorio + "/Assembly/Oracle.ManagedDataAccess.dll";
                         AssemblyInstance = "Oracle.ManagedDataAccess.Client.OracleConnection";
                         break;
-                    case "INFORMIX":
-                        ConnString = "Database=" + this.DBNAME + ";Host=" + this.HOST + ";Server=" + this.SERVER + ";Service=" + this.DBPORT + ";Protocol=" + this.PROTOCOL + ";UID=" + this.USER + ";Password=" + this.PASS + ";client_locale=" + this.LOCALE + "; db_locale=" + this.LOCALE + ";Min Pool Size=1;Max Pool Size=100;Connect Timeout=600";
-                        AssemblyFile = Diretorio + "/Assembly/IBM.Data.Informix.dll";
-                        AssemblyInstance = "IBM.Data.Informix.IfxConnection";
+                    case "POSTGRESQL":
+                        ConnString = "Server=" + this.HOST + ";Port=" + this.DBPORT + ";User Id=" + this.USER + ";Password=" + this.PASS + ";Database=" + this.DBNAME + ";";
+                        AssemblyFile = Diretorio + "Assembly/Npgsql.dll";
+                        AssemblyInstance = "Npgsql.NpgsqlConnection";//System.Data.SqlClient.SqlClientFactory
                         break;
                     default:
                         throw new Exception("Banco de dados " + this.DATABASE.ToUpper() + " não suportado.");
