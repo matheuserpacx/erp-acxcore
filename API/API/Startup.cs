@@ -21,7 +21,7 @@ namespace API
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            API.Config.ConfigDB.Configurar();
+            //API.Config.ConfigDB.Configurar();
         }
 
         public IConfiguration Configuration { get; }
@@ -48,11 +48,19 @@ namespace API
 
             app.UseEndpoints(endpoints =>
             {
+                //endpoints.MapHealthChecks("/healthz").RequireAuthorization();
                 endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                //endpoints.MapRazorPages();
             });
 
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapControllers();
+            //});
 
-            
         }
     }
 }
