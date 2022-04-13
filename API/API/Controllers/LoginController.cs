@@ -11,8 +11,6 @@ using API.Common;
 
 namespace API.Controllers
 {
-    [Controller]
-    [Route("[acx]")]
     public class LoginController : Controller
     {
         char[] charsToTrim = { '*', ' ', '\'' };
@@ -21,8 +19,6 @@ namespace API.Controllers
         DB conn = new DB();
 
         [HttpPost]
-        [Route("getAuthorizeUser")]
-        [AllowAnonymous]
         public JsonResult getAuthorizeUser(Login l)
         {
             Loginacx loginacx = new Loginacx();
