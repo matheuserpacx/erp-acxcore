@@ -72,17 +72,17 @@ namespace API
                 {
                     case "MYSQL":
                         ConnString = "Server=" + this.HOST + ";Port=" + this.DBPORT + ";Database=" + this.DBNAME + ";Uid=" + this.USER + ";Pwd=" + this.PASS + ";Pooling=True;CharSet=utf8;Connection Timeout=300;Default Command Timeout=300;";
-                        AssemblyFile = Diretorio + "/Assembly/MySql.Data.dll";
+                        AssemblyFile = Diretorio + "MySql.Data.dll";
                         AssemblyInstance = "MySql.Data.MySqlClient.MySqlConnection";
                         break;
                     case "SQLSERVER":
                         ConnString = "Server=" + this.HOST + "," + this.DBPORT + ";Database=" + this.DBNAME + ";User Id=" + this.USER + ";Password=" + this.PASS;
-                        AssemblyFile = Diretorio + "/Assembly/System.Data.dll";
+                        AssemblyFile = Diretorio + "System.Data.dll";
                         AssemblyInstance = "System.Data.SqlClient.SqlConnection";
                         break;
                     case "ORACLE":
                         ConnString = "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=" + this.HOST + ")(PORT=" + this.DBPORT + "))(CONNECT_DATA=(SERVICE_NAME=" + this.SID + ")));User Id=" + this.USER + ";Password=" + this.PASS + ";Min Pool Size=10;Connection Lifetime=120;Connection Timeout=60;Incr Pool Size=5;Decr Pool Size=2";
-                        AssemblyFile = Diretorio + "/Assembly/Oracle.ManagedDataAccess.dll";
+                        AssemblyFile = Diretorio + "Oracle.ManagedDataAccess.dll";
                         AssemblyInstance = "Oracle.ManagedDataAccess.Client.OracleConnection";
                         break;
                     case "POSTGRESQL":
@@ -161,22 +161,22 @@ namespace API
                 {
                     case "MYSQL":
                         ConnString = "Server=" + this.HOST + ";Port=" + this.DBPORT + ";Database=" + this.DBNAME + ";Uid=" + this.USER + ";Pwd=" + this.PASS + ";Pooling=True;CharSet=utf8;Connection Timeout=300;Default Command Timeout=300;";
-                        AssemblyFile = Diretorio + "/Assembly/MySql.Data.dll";
+                        AssemblyFile = Diretorio + "MySql.Data.dll";
                         AssemblyInstance = "MySql.Data.MySqlClient.MySqlConnection";
                         break;
                     case "SQLSERVER":
                         ConnString = "Server=" + this.HOST + "," + this.DBPORT + ";Database=" + this.DBNAME + ";User Id=" + this.USER + ";Password=" + this.PASS;
-                        AssemblyFile = Diretorio + "/Assembly/System.Data.dll";
+                        AssemblyFile = Diretorio + "System.Data.dll";
                         AssemblyInstance = "System.Data.SqlClient.SqlConnection";
                         break;
                     case "ORACLE":
                         ConnString = "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=" + this.HOST + ")(PORT=" + this.DBPORT + "))(CONNECT_DATA=(SERVICE_NAME=" + this.SID + ")));User Id=" + this.USER + ";Password=" + this.PASS + ";Min Pool Size=10;Connection Lifetime=120;Connection Timeout=60;Incr Pool Size=5;Decr Pool Size=2";
-                        AssemblyFile = Diretorio + "/Assembly/Oracle.ManagedDataAccess.dll";
+                        AssemblyFile = Diretorio + "Oracle.ManagedDataAccess.dll";
                         AssemblyInstance = "Oracle.ManagedDataAccess.Client.OracleConnection";
                         break;
                     case "POSTGRESQL":
                         ConnString = "Server=" + this.HOST + ";Port=" + this.DBPORT + ";User Id=" + this.USER + ";Password=" + this.PASS + ";Database=" + this.DBNAME + ";";
-                        AssemblyFile = Diretorio + "/Npgsql.dll";
+                        AssemblyFile = Diretorio + "Assembly/Npgsql.dll";
                         AssemblyInstance = "Npgsql.NpgsqlConnection";//System.Data.SqlClient.SqlClientFactory
                         break;
                     default:
