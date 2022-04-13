@@ -68,7 +68,6 @@ namespace API
                 }
 
                 var Diretorio = Sistema.RootPath();
-
                 switch (this.DATABASE.ToUpper())
                 {
                     case "MYSQL":
