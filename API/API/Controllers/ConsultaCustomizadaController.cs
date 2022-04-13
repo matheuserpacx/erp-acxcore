@@ -65,7 +65,7 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        public JsonResult update(Customizacao consulta, string token)
+        public JsonResult update([FromBody] Customizacao consulta, string token)
         {
             try
             {

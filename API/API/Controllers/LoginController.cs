@@ -19,7 +19,7 @@ namespace API.Controllers
         DB conn = new DB();
 
         [HttpPost]
-        public JsonResult getAuthorizeUser(Login l)
+        public JsonResult getAuthorizeUser([FromBody] Login l)
         {
             Loginacx loginacx = new Loginacx();
             bool status_sessao_ativa = false;
