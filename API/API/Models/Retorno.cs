@@ -7,9 +7,9 @@ namespace API.Models
 {
     public class Retorno
     {
-        public string msg;
-        public string erro;
-        public bool status;
+        public string msg { get; set; }
+        public string erro { get; set; }
+        public bool status { get; set; }
 
         public Retorno(string r_msg = "Processamento Realizado com Sucesso.", string r_erro = "", bool r_status = true)
         {
@@ -21,26 +21,30 @@ namespace API.Models
 
     public class RetornoLogin
     {
-        public string msg;
-        public string erro;
-        public bool status;
-        public bool status_sessao; // Variavel para informar que ja existe uma sessao ativa em outro navegador ou computador (login/empresa/estabelecimento)
-
         public RetornoLogin(string r_msg = "Processamento Realizado com Sucesso.", string r_erro = "", bool r_status = true, bool r_status_sessao = false)
         {
             this.msg = r_msg;
             this.erro = r_erro;
             this.status = r_status;
-            this.status_sessao = r_status_sessao;   
+            this.status_sessao = r_status_sessao;
         }
+
+        public string msg { get; set; }
+
+        public string erro { get; set; }
+
+        public bool status { get; set; }
+
+        public bool status_sessao { get; set; } // Variavel para informar que ja existe uma sessao ativa em outro navegador ou computador (login/empresa/estabelecimento)
+
         public string chave { get; set; }
     }
 
     public class getVinculoAllRetornoLogin
     {
-        public string msg;
-        public string erro;
-        public bool status;
+        public string msg { get; set; }
+        public string erro { get; set; }
+        public bool status { get; set; }
 
         public getVinculoAllRetornoLogin(string r_msg = "Processamento Realizado com Sucesso.", string r_erro = "", bool r_status = true)
         {
@@ -54,9 +58,9 @@ namespace API.Models
 
     public class getVinculoRetornoLogin
     {
-        public string msg;
-        public string erro;
-        public bool status;
+        public string msg { get; set; }
+        public string erro { get; set; }
+        public bool status { get; set; }
 
         public getVinculoRetornoLogin(string r_msg = "Processamento Realizado com Sucesso.", string r_erro = "", bool r_status = true)
         {
@@ -70,9 +74,9 @@ namespace API.Models
 
     public class getConsultaCustomizadaRetorno
     {
-        public string msg;
-        public string erro;
-        public bool status;
+        public string msg { get; set; }
+        public string erro { get; set; }
+        public bool status { get; set; }
 
         public getConsultaCustomizadaRetorno(string r_msg = "Processamento Realizado com Sucesso.", string r_erro = "", bool r_status = true)
         {
@@ -85,9 +89,9 @@ namespace API.Models
 
     public class getCustomizacaoRetorno
     {
-        public string msg;
-        public string erro;
-        public bool status;
+        public string msg { get; set; }
+        public string erro { get; set; }
+        public bool status { get; set; }
 
         public getCustomizacaoRetorno(string r_msg = "Processamento Realizado com Sucesso.", string r_erro = "", bool r_status = true)
         {
