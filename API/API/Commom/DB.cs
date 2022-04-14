@@ -67,7 +67,7 @@ namespace API
                     this.DATABASE = this.DBAlternativo;
                 }
 
-                var Diretorio = Sistema.RootPath();
+                var Diretorio = this.ReadConfig();
                 switch (this.DATABASE.ToUpper())
                 {
                     case "MYSQL":
@@ -155,7 +155,7 @@ namespace API
 
                 String ConnString = "";
 
-                var Diretorio = Sistema.RootPath();
+                var Diretorio = this.ReadConfig();
 
                 switch (this.DATABASE.ToUpper())
                 {
@@ -176,7 +176,7 @@ namespace API
                         break;
                     case "POSTGRESQL":
                         ConnString = "Server=" + this.HOST + ";Port=" + this.DBPORT + ";User Id=" + this.USER + ";Password=" + this.PASS + ";Database=" + this.DBNAME + ";";
-                        AssemblyFile = Diretorio + "Npgsql.dll";
+                        AssemblyFile = Diretorio + "Assembly/Npgsql.dll";
                         AssemblyInstance = "Npgsql.NpgsqlConnection";//System.Data.SqlClient.SqlClientFactory
                         break;
                     default:
