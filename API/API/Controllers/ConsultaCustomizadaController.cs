@@ -19,7 +19,7 @@ namespace API.Controllers
         DB conn = new DB();
 
         [HttpPost]
-        public JsonResult insert(Customizacao consulta, string token)
+        public JsonResult insert([FromBody] Customizacao consulta, string token)
         {
             try
             {
@@ -114,7 +114,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public JsonResult consulta(string token)
+        public JsonResult consulta([FromBody] string token)
         {
             Loginacx.DadosUsuario t = new Loginacx.DadosUsuario(token);
 
@@ -144,7 +144,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public JsonResult consulta(int cod_consulta, string token)
+        public JsonResult consulta([FromBody] int cod_consulta, string token)
         {
             Loginacx.DadosUsuario t = new Loginacx.DadosUsuario(token);
 

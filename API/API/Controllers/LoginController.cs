@@ -109,14 +109,14 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public JsonResult getOptionLogin(string usuario, string senha)
+        public JsonResult getOptionLogin([FromBody] Login l)
         {
             Loginacx.getVinculo login = new Loginacx.getVinculo();
             getVinculoRetornoLogin retorno = new getVinculoRetornoLogin();
             try
             {
-                login.Login = usuario;
-                login.Senha = senha;
+                login.Login = l.login;
+                login.Senha = l.senha;
                 login.StatusAtivo = "S";
 
                 var lista = login.getList();
@@ -134,7 +134,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public JsonResult verificaSessaoAtiva(string token)
+        public JsonResult verificaSessaoAtiva([FromBody] string token)
         {
             bool status_sessao_ativa = false;
             try
@@ -159,10 +159,9 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public JsonResult encerraSessoesAtivasEmpEstab(Login l)
+        public JsonResult encerraSessoesAtivasEmpEstab([FromBody] Login l)
         {
             retorno = new Retorno("Acesso liberado. Favor tentar efetuar o login novamente.", "", true);
-
             Loginacx loginacx = new Loginacx();
             try
             {
@@ -214,7 +213,7 @@ namespace API.Controllers
             return Json(retorno);
         }
 
-        [HttpPost]
+        [HttpDelete]
         public JsonResult encerraSessoesAtivasToken(string token)
         {
             retorno = new Retorno("Acesso liberado. Favor tentar efetuar o login novamente.", "", true);
