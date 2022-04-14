@@ -67,7 +67,7 @@ namespace API
                     this.DATABASE = this.DBAlternativo;
                 }
 
-                var Diretorio = this.ReadConfig();
+                var Diretorio = Sistema.RootPath();
                 switch (this.DATABASE.ToUpper())
                 {
                     case "MYSQL":

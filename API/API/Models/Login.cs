@@ -9,9 +9,12 @@ namespace API.Models
     public class Login
     {
         public string login { get; set; }
+        public string nom_usuario  { get; set; }
         public string senha { get; set; }
         public int empresa { get; set; }
+        public string nom_empresa { get; set; }
         public int estabelecimento { get; set; }
+        public string nom_estabelecimento { get; set; }
     }
 
     public class Acesso
@@ -19,7 +22,7 @@ namespace API.Models
         public int cod_usuario { get; set; }
         public int cod_empresa { get; set; }    
         public int cod_estabelecimento { get; set; }
-        public string chave { get; set; }
+        public string token { get; set; }
     }
 
     public class Empresa

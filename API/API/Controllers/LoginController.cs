@@ -6,7 +6,6 @@ using API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using API.Models;
 using API.Common;
 
 namespace API.Controllers
@@ -23,7 +22,6 @@ namespace API.Controllers
         {
             Loginacx loginacx = new Loginacx();
             bool status_sessao_ativa = false;
-
             try
             {
                 if (conn.Open())
@@ -62,6 +60,10 @@ namespace API.Controllers
                     s.CodEmpresa = l.empresa;
                     s.CodUsuario = int.Parse(conn.getValueByName("cod_usuario"));
 
+                    l.nom_usuario = conn.getValueByName("nom_usuario");
+                    l.nom_empresa = conn.getValueByName("nom_empresa");
+                    l.nom_estabelecimento = conn.getValueByName("nom_estabelecimento");
+
                     status_sessao_ativa = s.validaSessaoAtiva();
                     retornoLogin.status_sessao = status_sessao_ativa;
                     if (!status_sessao_ativa)
@@ -72,17 +74,19 @@ namespace API.Controllers
                         }
                         else
                         {
-                            Chave c = new Chave();
-                            c.getKey();
+                            //Chave c = new Chave();
+                            //c.getKey();
                             Acesso a = new Acesso();
                             a.cod_usuario = int.Parse(conn.getValueByName("cod_usuario"));
                             a.cod_empresa = int.Parse(conn.getValueByName("cod_empresa"));
                             a.cod_estabelecimento = int.Parse(conn.getValueByName("cod_estabelecimento"));
-                            a.chave = c.key;
+                            a.token = API.Commom.TokenService.GenerateToken(l);
 
                             setControleAcessos(a);
 
-                            retornoLogin.chave = a.chave;
+                            l.senha = "********";
+                            retornoLogin.token = a.token;
+                            retornoLogin.user = l; 
                         }
                     }
                     else
@@ -274,7 +278,7 @@ namespace API.Controllers
                 }
                 
                 query = $"insert into controle_acessos(cod_usuario, cod_empresa, cod_estabelecimento, chave_acesso) " +
-                            $" values({a.cod_usuario}, {a.cod_empresa}, {a.cod_estabelecimento}, '{a.chave}')";
+                            $" values({a.cod_usuario}, {a.cod_empresa}, {a.cod_estabelecimento}, '{a.token}')";
                 if (!connLogin.Execute(query))
                 {
                     connLogin.Rollback();
