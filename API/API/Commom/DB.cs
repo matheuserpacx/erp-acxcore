@@ -67,7 +67,7 @@ namespace API
                     this.DATABASE = this.DBAlternativo;
                 }
 
-                var Diretorio = this.ReadConfig();
+                var Diretorio = Sistema.RootPath();
                 switch (this.DATABASE.ToUpper())
                 {
                     case "MYSQL":
@@ -155,7 +155,7 @@ namespace API
 
                 String ConnString = "";
 
-                var Diretorio = this.ReadConfig();
+                var Diretorio = Sistema.RootPath();
 
                 switch (this.DATABASE.ToUpper())
                 {
@@ -176,7 +176,7 @@ namespace API
                         break;
                     case "POSTGRESQL":
                         ConnString = "Server=" + this.HOST + ";Port=" + this.DBPORT + ";User Id=" + this.USER + ";Password=" + this.PASS + ";Database=" + this.DBNAME + ";";
-                        AssemblyFile = Diretorio + "Assembly/Npgsql.dll";
+                        AssemblyFile = Diretorio + "Npgsql.dll";
                         AssemblyInstance = "Npgsql.NpgsqlConnection";//System.Data.SqlClient.SqlClientFactory
                         break;
                     default:
@@ -647,7 +647,7 @@ namespace API
                 int intID = 0;
 
                 var query = "";
-                
+
                 query = "SELECT valor FROM handson_controle_id WHERE tabela = '" + tabela + "'";
                 this.Query(query);
 
@@ -691,7 +691,7 @@ namespace API
                 return String.Empty;
             }
         }
-        
+
 
         public string DBDate(string date)
         {
@@ -708,7 +708,7 @@ namespace API
             }
             return newdate;
         }
-        
+
 
         public string sqlTrim(string str)
         {
