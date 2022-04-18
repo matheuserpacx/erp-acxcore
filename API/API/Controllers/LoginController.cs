@@ -133,20 +133,33 @@ namespace API.Controllers
             return Json(retorno);
         }
 
-        [HttpGet]
+        [HttpPost]
+
         public JsonResult verificaSessaoAtiva([FromBody] string token)
         {
+
+            token = token.Replace("Bearer ", "");
+
+            retornoLogin = new RetornoLogin("Sua sessão experiou. Você será encaminhado para a tela de login.", "", true, false);
+            Loginacx loginacx = new Loginacx();
             bool status_sessao_ativa = false;
             try
             {
                 Loginacx.Sessao s = new Loginacx.Sessao();
-                s.Chave = token;
+                s.Token = token;
 
                 status_sessao_ativa = s.validaSessaoAtiva();
                 retornoLogin.status_sessao = status_sessao_ativa;
                 if(status_sessao_ativa)
                 {
-                    retornoLogin = new RetornoLogin("Usuário ativo em outra sessão. Deseja encerrar as sessões ativas? ", "", true, status_sessao_ativa);
+                    loginacx.Token = token; 
+
+                    string query = loginacx.getQueryRemoveSessaoAtiva();
+                    if (!conn.Execute(query))
+                    {
+                        throw new Exception("Sua sessão expirou. Tivemos alguma falha ao direcionar para a tela de Login. Favor efetuar o logoff e login novamente");
+                    }
+                    //retornoLogin = new RetornoLogin("Usuário ativo em outra sessão. Deseja encerrar as sessões ativas? ", "", true, status_sessao_ativa);
                 }
             }
             catch (Exception e)
@@ -159,6 +172,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
+
         public JsonResult encerraSessoesAtivasEmpEstab([FromBody] Login l)
         {
             retorno = new Retorno("Acesso liberado. Favor tentar efetuar o login novamente.", "", true);
@@ -225,7 +239,7 @@ namespace API.Controllers
                 {
                     string query = "";
 
-                    loginacx.Chave = token;
+                    loginacx.Token = token;
                     query = loginacx.getQueryControleAcesso();
                     conn.Query(query);
 
