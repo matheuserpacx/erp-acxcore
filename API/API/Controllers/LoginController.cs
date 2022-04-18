@@ -105,14 +105,14 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public JsonResult getOptionLogin(string usuario, string senha)
+        public JsonResult getOptionLogin([FromBody] Login l)
         {
             Loginacx.getVinculo login = new Loginacx.getVinculo();
             getVinculoRetornoLogin retorno = new getVinculoRetornoLogin();
             try
             {
-                login.Login = usuario;
-                login.Senha = senha;
+                login.Login = l.login;
+                login.Senha = l.senha;
                 login.StatusAtivo = "S";
 
                 var lista = login.getList();
