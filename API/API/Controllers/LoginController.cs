@@ -133,11 +133,12 @@ namespace API.Controllers
             return Json(retorno);
         }
 
-        [HttpPost]
+        [HttpGet]
+        //[Authorize]
 
-        public JsonResult verificaSessaoAtiva([FromBody] string token)
+        public JsonResult verificaSessaoAtiva(string token)
         {
-
+            //return Json("Autenticado");
             token = token.Replace("Bearer ", "");
 
             retornoLogin = new RetornoLogin("Sua sessão experiou. Você será encaminhado para a tela de login.", "", true, false);
@@ -150,9 +151,9 @@ namespace API.Controllers
 
                 status_sessao_ativa = s.validaSessaoAtiva();
                 retornoLogin.status_sessao = status_sessao_ativa;
-                if(status_sessao_ativa)
+                if (status_sessao_ativa)
                 {
-                    loginacx.Token = token; 
+                    loginacx.Token = token;
 
                     string query = loginacx.getQueryRemoveSessaoAtiva();
                     if (!conn.Execute(query))
