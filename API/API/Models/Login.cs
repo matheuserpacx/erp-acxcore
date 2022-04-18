@@ -9,9 +9,12 @@ namespace API.Models
     public class Login
     {
         public string login { get; set; }
+        public string nom_usuario  { get; set; }
         public string senha { get; set; }
         public int empresa { get; set; }
+        public string nom_empresa { get; set; }
         public int estabelecimento { get; set; }
+        public string nom_estabelecimento { get; set; }
     }
 
     public class Acesso
@@ -19,7 +22,7 @@ namespace API.Models
         public int cod_usuario { get; set; }
         public int cod_empresa { get; set; }    
         public int cod_estabelecimento { get; set; }
-        public string chave { get; set; }
+        public string token { get; set; }
     }
 
     public class Empresa
@@ -48,7 +51,7 @@ namespace API.Models
         private int _cod_usuario;
         private int _cod_empresa;
         private int _cod_estabelecimento;
-        private string _chave;
+        private string _token;
         private string _usuario;
         private string _senha;
         public int CodAcesso
@@ -74,10 +77,10 @@ namespace API.Models
             get { return _cod_estabelecimento; }
             set { _cod_estabelecimento = value; }
         }
-        public string Chave
+        public string Token
         {
-            get { return _chave; }
-            set { _chave = (String.IsNullOrEmpty(value)) ? throw new Exception("Token Inválido. Favor efetuar o login novamente.") : value; }
+            get { return _token; }
+            set { _token = (String.IsNullOrEmpty(value)) ? throw new Exception("Token Inválido. Favor efetuar o login novamente.") : value; }
         }
 
         public string Usuario
@@ -111,9 +114,9 @@ namespace API.Models
                 query += $" and cod_estabelecimento = {this.CodEstabelecimento}";
             }
 
-            if (!String.IsNullOrEmpty(this.Chave))
+            if (!String.IsNullOrEmpty(this.Token))
             {
-                query += $" and chave_acesso = '{this.Chave}'";
+                query += $" and chave_acesso = '{this.Token}'";
             }
 
             return query;
@@ -160,9 +163,9 @@ namespace API.Models
                 query += $" and cod_estabelecimento = {this.CodEstabelecimento}";
             }
 
-            if (!String.IsNullOrEmpty(this.Chave))
+            if (!String.IsNullOrEmpty(this.Token))
             {
-                query += $" and cod_estabelecimento = {this.Chave}";
+                query += $" and cod_estabelecimento = {this.Token}";
             }
 
             return query;
@@ -318,7 +321,7 @@ namespace API.Models
         {
             public DadosUsuario(string chave)
             {
-                this.Chave = chave;
+                this.Token = chave;
                 this.getDados();
             }
 
@@ -336,7 +339,7 @@ namespace API.Models
                         this.CodUsuario = int.Parse(connAcesso.getValueByName("cod_usuario"));
                         this.CodEmpresa = int.Parse(connAcesso.getValueByName("cod_empresa"));
                         this.CodEstabelecimento = int.Parse(connAcesso.getValueByName("cod_estabelecimento"));
-                        this.Chave = connAcesso.getValueByName("chave_acesso");
+                        this.Token = connAcesso.getValueByName("chave_acesso");
                     }
                     else
                     {

@@ -113,7 +113,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public JsonResult consulta(string token)
+        public JsonResult consulta([FromBody] string token)
         {
             Loginacx.DadosUsuario t = new Loginacx.DadosUsuario(token);
 
@@ -143,7 +143,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public JsonResult consulta(int cod_consulta, string token)
+        public JsonResult consulta([FromBody] int cod_consulta, string token)
         {
             Loginacx.DadosUsuario t = new Loginacx.DadosUsuario(token);
 

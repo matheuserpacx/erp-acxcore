@@ -6,7 +6,6 @@ using API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using API.Models;
 using API.Common;
 
 namespace API.Controllers
@@ -23,7 +22,6 @@ namespace API.Controllers
         {
             Loginacx loginacx = new Loginacx();
             bool status_sessao_ativa = false;
-
             try
             {
                 if (conn.Open())
@@ -62,6 +60,10 @@ namespace API.Controllers
                     s.CodEmpresa = l.empresa;
                     s.CodUsuario = int.Parse(conn.getValueByName("cod_usuario"));
 
+                    l.nom_usuario = conn.getValueByName("nom_usuario");
+                    l.nom_empresa = conn.getValueByName("nom_empresa");
+                    l.nom_estabelecimento = conn.getValueByName("nom_estabelecimento");
+
                     status_sessao_ativa = s.validaSessaoAtiva();
                     retornoLogin.status_sessao = status_sessao_ativa;
                     if (!status_sessao_ativa)
@@ -72,17 +74,19 @@ namespace API.Controllers
                         }
                         else
                         {
-                            Chave c = new Chave();
-                            c.getKey();
+                            //Chave c = new Chave();
+                            //c.getKey();
                             Acesso a = new Acesso();
                             a.cod_usuario = int.Parse(conn.getValueByName("cod_usuario"));
                             a.cod_empresa = int.Parse(conn.getValueByName("cod_empresa"));
                             a.cod_estabelecimento = int.Parse(conn.getValueByName("cod_estabelecimento"));
-                            a.chave = c.key;
+                            a.token = API.Commom.TokenService.GenerateToken(l);
 
                             setControleAcessos(a);
 
-                            retornoLogin.chave = a.chave;
+                            l.senha = "********";
+                            retornoLogin.token = a.token;
+                            retornoLogin.user = l; 
                         }
                     }
                     else
@@ -129,20 +133,33 @@ namespace API.Controllers
             return Json(retorno);
         }
 
-        [HttpGet]
-        public JsonResult verificaSessaoAtiva(string token)
+        [HttpPost]
+
+        public JsonResult verificaSessaoAtiva([FromBody] string token)
         {
+
+            token = token.Replace("Bearer ", "");
+
+            retornoLogin = new RetornoLogin("Sua sessão experiou. Você será encaminhado para a tela de login.", "", true, false);
+            Loginacx loginacx = new Loginacx();
             bool status_sessao_ativa = false;
             try
             {
                 Loginacx.Sessao s = new Loginacx.Sessao();
-                s.Chave = token;
+                s.Token = token;
 
                 status_sessao_ativa = s.validaSessaoAtiva();
                 retornoLogin.status_sessao = status_sessao_ativa;
                 if(status_sessao_ativa)
                 {
-                    retornoLogin = new RetornoLogin("Usuário ativo em outra sessão. Deseja encerrar as sessões ativas? ", "", true, status_sessao_ativa);
+                    loginacx.Token = token; 
+
+                    string query = loginacx.getQueryRemoveSessaoAtiva();
+                    if (!conn.Execute(query))
+                    {
+                        throw new Exception("Sua sessão expirou. Tivemos alguma falha ao direcionar para a tela de Login. Favor efetuar o logoff e login novamente");
+                    }
+                    //retornoLogin = new RetornoLogin("Usuário ativo em outra sessão. Deseja encerrar as sessões ativas? ", "", true, status_sessao_ativa);
                 }
             }
             catch (Exception e)
@@ -155,10 +172,10 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public JsonResult encerraSessoesAtivasEmpEstab(Login l)
+
+        public JsonResult encerraSessoesAtivasEmpEstab([FromBody] Login l)
         {
             retorno = new Retorno("Acesso liberado. Favor tentar efetuar o login novamente.", "", true);
-
             Loginacx loginacx = new Loginacx();
             try
             {
@@ -210,7 +227,7 @@ namespace API.Controllers
             return Json(retorno);
         }
 
-        [HttpPost]
+        [HttpDelete]
         public JsonResult encerraSessoesAtivasToken(string token)
         {
             retorno = new Retorno("Acesso liberado. Favor tentar efetuar o login novamente.", "", true);
@@ -222,7 +239,7 @@ namespace API.Controllers
                 {
                     string query = "";
 
-                    loginacx.Chave = token;
+                    loginacx.Token = token;
                     query = loginacx.getQueryControleAcesso();
                     conn.Query(query);
 
@@ -274,7 +291,7 @@ namespace API.Controllers
                 }
                 
                 query = $"insert into controle_acessos(cod_usuario, cod_empresa, cod_estabelecimento, chave_acesso) " +
-                            $" values({a.cod_usuario}, {a.cod_empresa}, {a.cod_estabelecimento}, '{a.chave}')";
+                            $" values({a.cod_usuario}, {a.cod_empresa}, {a.cod_estabelecimento}, '{a.token}')";
                 if (!connLogin.Execute(query))
                 {
                     connLogin.Rollback();

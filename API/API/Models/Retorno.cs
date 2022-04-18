@@ -37,7 +37,8 @@ namespace API.Models
 
         public bool status_sessao { get; set; } // Variavel para informar que ja existe uma sessao ativa em outro navegador ou computador (login/empresa/estabelecimento)
 
-        public string chave { get; set; }
+        public string token { get; set; }
+        public Object user { get; set; }   
     }
 
     public class getVinculoAllRetornoLogin
