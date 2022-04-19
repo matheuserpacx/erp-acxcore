@@ -41,7 +41,7 @@ namespace API.Controllers
                     }
 
                     conn.Begin();
-                    query = $"insert into consulta_customizada(cod_usuario, cod_empresa, cod_estabelecimento, apelido_consulta, consulta)" +
+                    query = $"insert into acx_consulta_customizada(cod_usuario, cod_empresa, cod_estabelecimento, apelido_consulta, consulta)" +
                             $" values({t.CodUsuario}, {t.CodEmpresa}, {t.CodEstabelecimento}, '{consulta.apelido_consulta}', '{consulta.query}')";
                     if (!conn.Execute(query))
                     {
@@ -78,23 +78,22 @@ namespace API.Controllers
                     c.CodEmpresa = t.CodEmpresa;
                     c.CodUsuario = t.CodUsuario;
                     c.CodEstabelecimento = t.CodEstabelecimento;
-                    c.Query = consulta.query;
-                    c.Apelido = consulta.apelido_consulta;
+                    c.CodConsulta = consulta.cod_consulta;
 
-                    if (c.validaCustomizacaoExistente())
+                    if (!c.validaCustomizacaoExistente())
                     {
-                        throw new Exception("Consulta já registrada. Inclusão cancelada");
+                        throw new Exception("Consulta não cadastrada. Modificação cancelada!");
                     }
 
                     conn.Begin();
-                    query = $"update consulta_customizada set apelido_consulta = '{consulta.apelido_consulta}', consulta = '{consulta.query}' " +
+                    query = $"update acx_consulta_customizada set apelido_consulta = '{consulta.apelido_consulta}', consulta = '{consulta.query}' " +
                             $" where cod_usuario = {t.CodUsuario} " +
                             $" and cod_empresa = {t.CodEmpresa} " +
                             $" and cod_estabelecimento = {t.CodEstabelecimento} " +
                             $" and cod_consulta = {consulta.cod_consulta}";
                     if (!conn.Execute(query))
                     {
-                        throw new Exception($"Inclusão cancelada. Não foi possivel continuar com o cadastro. {conn.ErrorMsg}");
+                        throw new Exception($"Modificação cancelada. Não foi possivel continuar. {conn.ErrorMsg}");
                     }
                     conn.Commit();
                 }
@@ -114,9 +113,10 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public JsonResult consulta([FromBody] string token)
+        [Authorize]
+        public JsonResult consulta()
         {
-            Loginacx.DadosUsuario t = new Loginacx.DadosUsuario(token);
+            //Loginacx.DadosUsuario t = new Loginacx.DadosUsuario(token);
 
             getCustomizacaoRetorno retornoCustomizacao = new getCustomizacaoRetorno();
             retornoCustomizacao.listaConsulta = new List<Dictionary<string, string>>();
@@ -172,6 +172,58 @@ namespace API.Controllers
                 retornoCustomizacao = new getCustomizacaoRetorno("", e.Message, false);
             }
             return Json(retornoCustomizacao);
+        }
+
+        [HttpDelete]
+        public JsonResult delete([FromBody] Customizacao consulta,string token)
+        {
+            Loginacx.DadosUsuario t = new Loginacx.DadosUsuario(token);
+
+            try
+            {
+                if (conn.Open())
+                {
+                    var query = "";
+                    ConsultaCustomizada c = new ConsultaCustomizada();
+                    c.CodEmpresa = t.CodEmpresa;
+                    c.CodUsuario = t.CodUsuario;
+                    c.CodEstabelecimento = t.CodEstabelecimento;
+                    c.Query = consulta.query;
+                    c.Apelido = consulta.apelido_consulta;
+                    c.CodConsulta = consulta.cod_consulta;
+
+                    if (!c.validaCustomizacaoExistente())
+                    {
+                        throw new Exception("Consulta não registrada. Deleção cancelada");
+                    }
+
+                    conn.Begin();
+                    query = $"delete from acx_consulta_customizada " +
+                            $" where cod_usuario = {t.CodUsuario} " +
+                            $" and cod_empresa = {t.CodEmpresa} " +
+                            $" and cod_estabelecimento = {t.CodEstabelecimento} " +
+                            $" and cod_consulta = {consulta.cod_consulta}" +
+                            $" and apelido_consulta = '{consulta.apelido_consulta}'" +
+                            $" and consulta = '{consulta.query}'";
+                    if (!conn.Execute(query))
+                    {
+                        throw new Exception($"Deleção cancelada. Não foi possivel continuar. {conn.ErrorMsg}");
+                    }
+                    conn.Commit();
+
+                }
+                else
+                {
+                    throw new Exception("A conexão com o banco de dados foi encerrada de forma inesperada.");
+                }
+            }
+            catch (Exception e)
+            {
+                conn.Rollback();
+                retorno = new Retorno("", e.Message, false);
+            }
+            conn.Commit();
+            return Json(retorno);
         }
     }
 }

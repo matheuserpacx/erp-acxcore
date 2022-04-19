@@ -17,8 +17,11 @@ namespace API.Commom
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.login.ToString()),
-                    new Claim(ClaimTypes.Role, user.empresa.ToString())
+                    //new Claim(ClaimTypes.Name, user.login.ToString()),
+                    //new Claim(ClaimTypes.Role, user.empresa.ToString()),
+                    new Claim("Login", user.login.ToString()),
+                    new Claim("Empresa", user.empresa.ToString()),
+                    new Claim("Estabelecimento", user.nom_estabelecimento.ToString()),
                 }),
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

@@ -97,7 +97,7 @@ namespace API.Models
 
         public string getQueryControleAcesso()
         {
-            var query = $"select * from controle_acessos where 1 = 1";
+            var query = $"select * from acx_controle_acessos where 1 = 1";
 
             if (this.CodUsuario > 0)
             {
@@ -129,10 +129,10 @@ namespace API.Models
                            $"        a.*," +
                            $"        b.cod_estabelecimento," +
                            $"        b.nom_estabelecimento" +
-                           $" FROM empresa_acx a," +
-                           $"      estabelecimento_acx b," +
-                           $"      vinculo_usuario_emp_acx c," +
-                           $"      usuarios_acx d" +
+                           $" FROM acx_empresa a," +
+                           $"      acx_estabelecimento b," +
+                           $"      acx_vinculo_usuario_emp c," +
+                           $"      acx_usuarios d" +
                            $" WHERE a.cod_empresa = b.cod_empresa" +
                            $"   AND a.cod_empresa = c.cod_empresa" +
                            $"   AND d.cod_usuario = c.cod_usuario" +
@@ -147,7 +147,7 @@ namespace API.Models
 
         public string getQueryRemoveSessaoAtiva()
         {
-            string query = $"delete from controle_acessos where 1 = 1 ";
+            string query = $"delete from acx_controle_acessos where 1 = 1 ";
             if (this.CodUsuario > 0)
             {
                 query += $" and cod_usuario = {this.CodUsuario}";
@@ -242,7 +242,7 @@ namespace API.Models
                             throw new Exception("Login ou Senha inválido.");
                         }
 
-                        query = $"select cod_login from usuarios_acx where login = '{this.Login}' and senha = '{this.Senha}' and status_ativo = 'S'";
+                        query = $"select cod_login from acx_usuarios where login = '{this.Login}' and senha = '{this.Senha}' and status_ativo = 'S'";
                         connVinculo.Query(query);
                         if (connVinculo.getRows() == 0)
                         {
@@ -251,7 +251,7 @@ namespace API.Models
                     }
 
                     query = $"select cod_usuario, nom_usuario " +
-                            $" from usuarios_acx " +
+                            $" from acx_usuarios " +
                             $" where login = '{this.Login}' " +
                             $" and senha = '{this.Senha}' " +
                             $" and status_ativo = '{this.StatusAtivo}'";
@@ -264,8 +264,8 @@ namespace API.Models
                         vinculo.nom_usuario = connVinculo.getValueByName("nom_usuario");
 
                         query = $"select a.*, b.nom_empresa " +
-                                $" from vinculo_usuario_emp_acx a, " +
-                                $" empresa_acx b " +
+                                $" from acx_vinculo_usuario_emp a, " +
+                                $" acx_empresa b " +
                                 $" where a.cod_empresa = b.cod_empresa " +
                                 $" and a.cod_usuario = {vinculo.cod_usuario}";
                         DataTable dadosEmp = connVinculo.getDataTable(query);
@@ -281,7 +281,7 @@ namespace API.Models
                                 emp.cod_empresa = int.Parse(row["cod_empresa"].ToString());
                                 emp.nom_empresa = row["nom_empresa"].ToString();
 
-                                query = $"select cod_estabelecimento, nom_estabelecimento from estabelecimento_acx where cod_empresa = {emp.cod_empresa}";
+                                query = $"select cod_estabelecimento, nom_estabelecimento from acx_estabelecimento where cod_empresa = {emp.cod_empresa}";
                                 DataTable dadosEstab = connVinculo.getDataTable(query);
 
                                 linhas = dadosEstab.Rows.Count;

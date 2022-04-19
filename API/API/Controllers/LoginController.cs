@@ -152,9 +152,9 @@ namespace API.Controllers
 
                 status_sessao_ativa = s.validaSessaoAtiva();
                 retornoLogin.status_sessao = status_sessao_ativa;
-                if(status_sessao_ativa)
+                if (status_sessao_ativa)
                 {
-                    loginacx.Token = token; 
+                    loginacx.Token = token;
 
                     string query = loginacx.getQueryRemoveSessaoAtiva();
                     if (!conn.Execute(query))
@@ -276,14 +276,14 @@ namespace API.Controllers
             
             if (connLogin.Open())
             {
-                var query = $"select * from controle_acessos " +
+                var query = $"select * from acx_controle_acessos " +
                             $"  where cod_usuario = {a.cod_usuario} and cod_empresa = {a.cod_empresa} and cod_estabelecimento = {a.cod_estabelecimento}";
                 connLogin.Query(query);
 
                 connLogin.Begin();
                 if (connLogin.getRows() > 0)
                 {
-                    query = $"delete from controle_acessos " +
+                    query = $"delete from acx_controle_acessos " +
                             $"  where cod_usuario = {a.cod_usuario} and cod_empresa = {a.cod_empresa} and cod_estabelecimento = {a.cod_estabelecimento}";
                     if (!connLogin.Execute(query))
                     {
@@ -292,7 +292,7 @@ namespace API.Controllers
                     }
                 }
                 
-                query = $"insert into controle_acessos(cod_usuario, cod_empresa, cod_estabelecimento, chave_acesso) " +
+                query = $"insert into acx_controle_acessos(cod_usuario, cod_empresa, cod_estabelecimento, chave_acesso) " +
                             $" values({a.cod_usuario}, {a.cod_empresa}, {a.cod_estabelecimento}, '{a.token}')";
                 if (!connLogin.Execute(query))
                 {

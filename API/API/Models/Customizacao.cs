@@ -110,7 +110,7 @@ namespace API.Models
 
         private string getQueryCustomizacao()
         {
-            var query = $"select * from consulta_customizada where 1 = 1";
+            var query = $"select * from acx_consulta_customizada where 1 = 1";
 
             if (this.CodUsuario > 0)
             {
@@ -251,7 +251,7 @@ namespace API.Models
 
         private string getQueryCustomizacao()
         {
-            var query = $"select * from consulta_customizada where 1 = 1";
+            var query = $"select * from acx_consulta_customizada where 1 = 1";
 
             if (this.CodUsuario > 0)
             {

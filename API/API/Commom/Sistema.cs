@@ -181,13 +181,13 @@ namespace API
                 DB Conn = new DB();
                 if (Conn.Open())
                 {
-                    var query = "DELETE FROM bus_logs WHERE data < '"+ DataCalculada.ToString("yyyy-MM-dd") + "'";
+                    var query = "DELETE FROM acx_logs WHERE data < '"+ DataCalculada.ToString("yyyy-MM-dd") + "'";
                     if (!Conn.Execute(query))
                     {
                         Sistema.Log("Nenhum registro de log para excluir");
                     }
 
-                    query = "DELETE FROM bus_erros WHERE id NOT IN (SELECT id FROM bus_logs)";
+                    query = "DELETE FROM acx_erros WHERE id NOT IN (SELECT id FROM acx_logs)";
                     if (!Conn.Execute(query))
                     {
                         Sistema.Log("Nenhum erro de log para excluir");
