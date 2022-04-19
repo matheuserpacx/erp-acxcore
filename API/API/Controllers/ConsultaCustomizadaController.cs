@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using API.Models;
 using API.Common;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace API.Controllers
 {
@@ -19,20 +21,22 @@ namespace API.Controllers
         DB conn = new DB();
 
         [HttpPost]
-        public JsonResult insert([FromBody] Customizacao consulta, string token)
+        [Authorize]
+        public JsonResult insert([FromBody] Customizacao consulta)
         {
             try
             {
                 if (conn.Open())
                 {
-
-                    Loginacx.DadosUsuario t = new Loginacx.DadosUsuario(token);
+                    dynamic emp = User.FindFirst("empresa");
+                    dynamic estab = User.FindFirst("estabelecimento");
+                    dynamic cod_usu = User.FindFirst("cod_usuario");
 
                     var query = "";
                     ConsultaCustomizada c = new ConsultaCustomizada();
-                    c.CodEmpresa = t.CodEmpresa;
-                    c.CodUsuario = t.CodUsuario;
-                    c.CodEstabelecimento = t.CodEstabelecimento;
+                    c.CodEmpresa = int.Parse(emp.Value);
+                    c.CodUsuario = int.Parse(cod_usu.Value);
+                    c.CodEstabelecimento = int.Parse(estab.Value);
                     c.Query = consulta.query;
                     c.Apelido = consulta.apelido_consulta;
                     if (c.validaCustomizacaoExistente())
@@ -42,7 +46,7 @@ namespace API.Controllers
 
                     conn.Begin();
                     query = $"insert into acx_consulta_customizada(cod_usuario, cod_empresa, cod_estabelecimento, apelido_consulta, consulta)" +
-                            $" values({t.CodUsuario}, {t.CodEmpresa}, {t.CodEstabelecimento}, '{consulta.apelido_consulta}', '{consulta.query}')";
+                            $" values({c.CodUsuario}, {c.CodEmpresa}, {c.CodEstabelecimento}, '{consulta.apelido_consulta}', '{consulta.query}')";
                     if (!conn.Execute(query))
                     {
                         throw new Exception($"Inclusão cancelada. Não foi possivel continuar com o cadastro. {conn.ErrorMsg}");
@@ -65,19 +69,22 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        public JsonResult update([FromBody] Customizacao consulta, string token)
+        [Authorize]
+        public JsonResult update([FromBody] Customizacao consulta)
         {
             try
             {
                 if (conn.Open())
                 {
-                    Loginacx.DadosUsuario t = new Loginacx.DadosUsuario(token);
+                    dynamic emp = User.FindFirst("empresa");
+                    dynamic estab = User.FindFirst("estabelecimento");
+                    dynamic cod_usu = User.FindFirst("cod_usuario");
 
                     var query = "";
                     ConsultaCustomizada c = new ConsultaCustomizada();
-                    c.CodEmpresa = t.CodEmpresa;
-                    c.CodUsuario = t.CodUsuario;
-                    c.CodEstabelecimento = t.CodEstabelecimento;
+                    c.CodEmpresa = int.Parse(emp.Value);
+                    c.CodUsuario = int.Parse(cod_usu.Value);
+                    c.CodEstabelecimento = int.Parse(estab.Value);
                     c.CodConsulta = consulta.cod_consulta;
 
                     if (!c.validaCustomizacaoExistente())
@@ -87,9 +94,9 @@ namespace API.Controllers
 
                     conn.Begin();
                     query = $"update acx_consulta_customizada set apelido_consulta = '{consulta.apelido_consulta}', consulta = '{consulta.query}' " +
-                            $" where cod_usuario = {t.CodUsuario} " +
-                            $" and cod_empresa = {t.CodEmpresa} " +
-                            $" and cod_estabelecimento = {t.CodEstabelecimento} " +
+                            $" where cod_usuario = {c.CodUsuario} " +
+                            $" and cod_empresa = {c.CodEmpresa} " +
+                            $" and cod_estabelecimento = {c.CodEstabelecimento} " +
                             $" and cod_consulta = {consulta.cod_consulta}";
                     if (!conn.Execute(query))
                     {
@@ -116,7 +123,9 @@ namespace API.Controllers
         [Authorize]
         public JsonResult consulta()
         {
-            //Loginacx.DadosUsuario t = new Loginacx.DadosUsuario(token);
+            dynamic emp = User.FindFirst("empresa");
+            dynamic estab = User.FindFirst("estabelecimento");
+            dynamic cod_usu = User.FindFirst("cod_usuario");
 
             getCustomizacaoRetorno retornoCustomizacao = new getCustomizacaoRetorno();
             retornoCustomizacao.listaConsulta = new List<Dictionary<string, string>>();
@@ -124,10 +133,10 @@ namespace API.Controllers
             {
                 if (conn.Open())
                 {
-                    AllConsultas c = new AllConsultas();
-                    c.CodEmpresa = t.CodEmpresa;
-                    c.CodEstabelecimento = t.CodEstabelecimento;
-                    c.CodUsuario = t.CodUsuario;
+                    AllConsultas c = new AllConsultas();    
+                    c.CodEmpresa = int.Parse(emp.Value);
+                    c.CodEstabelecimento = int.Parse(estab.Value);
+                    c.CodUsuario = int.Parse(cod_usu.Value);
 
                     retornoCustomizacao.listaConsulta = c.returnConsulta();
                 }
@@ -139,14 +148,18 @@ namespace API.Controllers
             catch (Exception e)
             {
                 retorno = new Retorno("", e.Message, false);
+                return Json(retorno);
             }
             return Json(retornoCustomizacao);
         }
 
         [HttpPost]
-        public JsonResult consulta([FromBody] int cod_consulta, string token)
+        [Authorize]
+        public JsonResult consulta([FromBody] int cod_consulta)
         {
-            Loginacx.DadosUsuario t = new Loginacx.DadosUsuario(token);
+            dynamic emp = User.FindFirst("empresa");
+            dynamic estab = User.FindFirst("estabelecimento");
+            dynamic cod_usu = User.FindFirst("cod_usuario");
 
             getCustomizacaoRetorno retornoCustomizacao = new getCustomizacaoRetorno();
             retornoCustomizacao.listaConsulta = new List<Dictionary<string, string>>();
@@ -156,9 +169,9 @@ namespace API.Controllers
                 {
                     ConsultaCustomizada c = new ConsultaCustomizada();
                     c.CodConsulta = cod_consulta;
-                    c.CodEmpresa = t.CodEmpresa;
-                    c.CodEstabelecimento = t.CodEstabelecimento;
-                    c.CodUsuario = t.CodUsuario;
+                    c.CodEmpresa = int.Parse(emp.Value);
+                    c.CodEstabelecimento = int.Parse(estab.Value);
+                    c.CodUsuario = int.Parse(cod_usu.Value);
 
                     retornoCustomizacao.listaConsulta = c.returnConsulta();
                 }
@@ -175,9 +188,12 @@ namespace API.Controllers
         }
 
         [HttpDelete]
-        public JsonResult delete([FromBody] Customizacao consulta,string token)
+        [Authorize]
+        public JsonResult delete([FromBody] Customizacao consulta)
         {
-            Loginacx.DadosUsuario t = new Loginacx.DadosUsuario(token);
+            dynamic emp = User.FindFirst("empresa");
+            dynamic estab = User.FindFirst("estabelecimento");
+            dynamic cod_usu = User.FindFirst("cod_usuario");
 
             try
             {
@@ -185,9 +201,9 @@ namespace API.Controllers
                 {
                     var query = "";
                     ConsultaCustomizada c = new ConsultaCustomizada();
-                    c.CodEmpresa = t.CodEmpresa;
-                    c.CodUsuario = t.CodUsuario;
-                    c.CodEstabelecimento = t.CodEstabelecimento;
+                    c.CodEmpresa = int.Parse(emp.Value);
+                    c.CodUsuario = int.Parse(cod_usu.Value);
+                    c.CodEstabelecimento = int.Parse(estab.Value);
                     c.Query = consulta.query;
                     c.Apelido = consulta.apelido_consulta;
                     c.CodConsulta = consulta.cod_consulta;
@@ -199,9 +215,9 @@ namespace API.Controllers
 
                     conn.Begin();
                     query = $"delete from acx_consulta_customizada " +
-                            $" where cod_usuario = {t.CodUsuario} " +
-                            $" and cod_empresa = {t.CodEmpresa} " +
-                            $" and cod_estabelecimento = {t.CodEstabelecimento} " +
+                            $" where cod_usuario = {c.CodUsuario} " +
+                            $" and cod_empresa = {c.CodEmpresa} " +
+                            $" and cod_estabelecimento = {c.CodEstabelecimento} " +
                             $" and cod_consulta = {consulta.cod_consulta}" +
                             $" and apelido_consulta = '{consulta.apelido_consulta}'" +
                             $" and consulta = '{consulta.query}'";
@@ -221,6 +237,7 @@ namespace API.Controllers
             {
                 conn.Rollback();
                 retorno = new Retorno("", e.Message, false);
+                return Json(retorno);
             }
             conn.Commit();
             return Json(retorno);

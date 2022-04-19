@@ -8,6 +8,7 @@ namespace API.Models
 {
     public class Login
     {
+        public int cod_usuario { get; set; }
         public string login { get; set; }
         public string nom_usuario  { get; set; }
         public string senha { get; set; }

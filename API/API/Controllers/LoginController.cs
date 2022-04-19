@@ -63,6 +63,7 @@ namespace API.Controllers
                     l.nom_usuario = conn.getValueByName("nom_usuario");
                     l.nom_empresa = conn.getValueByName("nom_empresa");
                     l.nom_estabelecimento = conn.getValueByName("nom_estabelecimento");
+                    l.cod_usuario = int.Parse(conn.getValueByName("cod_usuario"));
 
                     status_sessao_ativa = s.validaSessaoAtiva();
                     retornoLogin.status_sessao = status_sessao_ativa;
