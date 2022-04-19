@@ -175,8 +175,8 @@ namespace API
                         AssemblyInstance = "Oracle.ManagedDataAccess.Client.OracleConnection";
                         break;
                     case "POSTGRESQL":
-                        ConnString = "Server=" + this.HOST + ";Port=" + this.DBPORT + ";User Id=" + this.USER + ";Password=" + this.PASS + ";Database=" + this.DBNAME + ";";
-                        AssemblyFile = Diretorio + "Npgsql.dll";
+                        ConnString = $"Server={this.HOST};Port={this.DBPORT};User Id={this.USER};Password={this.PASS};Database={this.DBNAME};";
+                        AssemblyFile = $"{Diretorio}Npgsql.dll";
                         AssemblyInstance = "Npgsql.NpgsqlConnection";//System.Data.SqlClient.SqlClientFactory
                         break;
                     default:

@@ -133,11 +133,13 @@ namespace API.Controllers
             return Json(retorno);
         }
 
-        [HttpPost]
-
-        public JsonResult verificaSessaoAtiva([FromBody] string token)
+        [HttpGet]
+        public JsonResult verificaSessaoAtiva(string token)
         {
-
+            if (String.IsNullOrEmpty(token))
+            {
+                throw new Exception("Não foi possivel validar Token. Você será redirecionado para a tela de login.");
+            }
             token = token.Replace("Bearer ", "");
 
             retornoLogin = new RetornoLogin("Sua sessão experiou. Você será encaminhado para a tela de login.", "", true, false);

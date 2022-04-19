@@ -25,7 +25,7 @@ namespace API
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            //API.Config.ConfigDB.Configurar();
+            API.Config.ConfigDB.Configurar();
         }
 
         public IConfiguration Configuration { get; }
