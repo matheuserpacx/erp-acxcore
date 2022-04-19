@@ -41,7 +41,7 @@ namespace API.Controllers
                     }
 
                     conn.Begin();
-                    query = $"insert into consulta_customizada(cod_usuario, cod_empresa, cod_estabelecimento, apelido_consulta, consulta)" +
+                    query = $"insert into acx_consulta_customizada(cod_usuario, cod_empresa, cod_estabelecimento, apelido_consulta, consulta)" +
                             $" values({t.CodUsuario}, {t.CodEmpresa}, {t.CodEstabelecimento}, '{consulta.apelido_consulta}', '{consulta.query}')";
                     if (!conn.Execute(query))
                     {
@@ -86,7 +86,7 @@ namespace API.Controllers
                     }
 
                     conn.Begin();
-                    query = $"update consulta_customizada set apelido_consulta = '{consulta.apelido_consulta}', consulta = '{consulta.query}' " +
+                    query = $"update acx_consulta_customizada set apelido_consulta = '{consulta.apelido_consulta}', consulta = '{consulta.query}' " +
                             $" where cod_usuario = {t.CodUsuario} " +
                             $" and cod_empresa = {t.CodEmpresa} " +
                             $" and cod_estabelecimento = {t.CodEstabelecimento} " +
@@ -113,9 +113,10 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public JsonResult consulta([FromBody] string token)
+        [Authorize]
+        public JsonResult consulta()
         {
-            Loginacx.DadosUsuario t = new Loginacx.DadosUsuario(token);
+            //Loginacx.DadosUsuario t = new Loginacx.DadosUsuario(token);
 
             getCustomizacaoRetorno retornoCustomizacao = new getCustomizacaoRetorno();
             retornoCustomizacao.listaConsulta = new List<Dictionary<string, string>>();
@@ -197,7 +198,7 @@ namespace API.Controllers
                     }
 
                     conn.Begin();
-                    query = $"delete from consulta_customizada " +
+                    query = $"delete from acx_consulta_customizada " +
                             $" where cod_usuario = {t.CodUsuario} " +
                             $" and cod_empresa = {t.CodEmpresa} " +
                             $" and cod_estabelecimento = {t.CodEstabelecimento} " +

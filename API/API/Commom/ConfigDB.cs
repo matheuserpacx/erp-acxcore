@@ -20,21 +20,21 @@ namespace API.Config
                 switch (versao)
                 {
                     case "01.000":
-                        dic_table.Add((idx++), "login_acx");
-                        dic_table.Add((idx++), "estabelecimento_acx");
-                        dic_table.Add((idx++), "empresa_acx");
-                        dic_table.Add((idx++), "vinculo_emp_estab_acx");
+                        dic_table.Add((idx++), "acx_login");
+                        dic_table.Add((idx++), "acx_estabelecimento");
+                        dic_table.Add((idx++), "acx_empresa");
+                        dic_table.Add((idx++), "acx_vinculo_emp_estab");
 
                         Script_table.Add(versao, dic_table);
                         break;
 
                     case "01.001":
-                        dic_table.Add((idx++), "consulta_customizada");
+                        dic_table.Add((idx++), "acx_consulta_customizada");
                         Script_table.Add(versao, dic_table);
                         break;
 
                     case "01.002":
-                        dic_table.Add((idx++), "controle_acessos");
+                        dic_table.Add((idx++), "acx_controle_acessos");
                         Script_table.Add(versao, dic_table);
                         break;
                 }
@@ -52,10 +52,10 @@ namespace API.Config
                 int ver = 0;
                 //VERSAO 01.000
                 dic.Add((idx++), "create table acx_versao(cod_versao [KEY],versao_atual varchar(02),release_atual varchar(03),versao_ant varchar(02),release_ant varchar(03),primary key(cod_versao))");
-                dic.Add((idx++), "create table usuarios_acx (cod_login serial,login varchar(20),senha varchar(30),	status_ativo varchar(1),primary key (cod_login, login))");
-                dic.Add((idx++), "create table estabelecimento_acx(cod_estab serial,cod_empresa int ,nom_estabelecimento varchar(100),primary key(cod_estab))");
-                dic.Add((idx++), "create table empresa_acx(cod_empresa [KEY],nom_empresa varchar(100),primary key(cod_empresa))");
-                dic.Add((idx++), "create table vinculo_usuario_emp_acx(cod_vinculo serial,cod_usuario int,cod_empresa int,	primary key(cod_vinculo))");
+                dic.Add((idx++), "create table acx_usuarios (cod_login serial,login varchar(20),senha varchar(30),	status_ativo varchar(1),primary key (cod_login, login))");
+                dic.Add((idx++), "create table acx_estabelecimento(cod_estab serial,cod_empresa int ,nom_estabelecimento varchar(100),primary key(cod_estab))");
+                dic.Add((idx++), "create table acx_empresa(cod_empresa [KEY],nom_empresa varchar(100),primary key(cod_empresa))");
+                dic.Add((idx++), "create table acx_vinculo_usuario_emp(cod_vinculo serial,cod_usuario int,cod_empresa int,	primary key(cod_vinculo))");
                 var versao = $"01.{(ver++).ToString().PadLeft(3, '0')}";
                 Script.Add(versao, dic);
                 getTables(versao);
@@ -64,7 +64,7 @@ namespace API.Config
                 dic = new Dictionary<int, string>();
                 idx = 0;
 
-                dic.Add((idx++), "create table consulta_customizada(cod_consulta [KEY],cod_usuario int,cod_empresa int,cod_estabelecimento int, apelido_consulta varchar(100),consulta varchar(30000))");
+                dic.Add((idx++), "create table acx_consulta_customizada(cod_consulta [KEY],cod_usuario int,cod_empresa int,cod_estabelecimento int, apelido_consulta varchar(100),consulta varchar(30000))");
                 versao = $"01.{(ver++).ToString().PadLeft(3, '0')}";
                 Script.Add(versao, dic);
                 getTables(versao);
@@ -72,7 +72,7 @@ namespace API.Config
                 dic = new Dictionary<int, string>();
                 idx = 0;
 
-                dic.Add((idx++), "create table controle_acessos(cod_acesso [KEY],cod_usuario int,cod_empresa int,cod_estabelecimento int,chave_acesso varchar(200), primary key (cod_acesso, cod_usuario, cod_empresa, cod_estabelecimento))");
+                dic.Add((idx++), "create table acx_controle_acessos(cod_acesso [KEY],cod_usuario int,cod_empresa int,cod_estabelecimento int,chave_acesso varchar(200), primary key (cod_acesso, cod_usuario, cod_empresa, cod_estabelecimento))");
                 versao = $"01.{(ver++).ToString().PadLeft(3, '0')}";
                 Script.Add(versao, dic);
                 getTables(versao);
