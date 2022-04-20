@@ -9,9 +9,10 @@ using System.Dynamic;
 
 namespace API.Models
 {
-    public class Customizacao
+    public class ConsultaInfos
     {
         public int cod_consulta { get; set; }
+        public int cod_window { get; set; }
         public string apelido_consulta { get; set; }
         public string query { get; set; }
     }
@@ -20,8 +21,9 @@ namespace API.Models
     {
         private int _cod_consulta;
         private int _cod_usuario;
-        private int _cod_empresa;
+        private string _cod_empresa;
         private int _cod_estabelecimento;
+        private int _cod_window;
         private string _apelido_consulta;
         private string _query;
 
@@ -54,12 +56,12 @@ namespace API.Models
             }
         }
 
-        public int CodEmpresa
+        public string CodEmpresa
         {
             get { return _cod_empresa; }
             set
             {
-                if (value == 0)
+                if (String.IsNullOrEmpty(value))
                 {
                     throw new Exception("Empresa Obrigatório, Favor informar");
                 }
@@ -82,6 +84,22 @@ namespace API.Models
                 else
                 {
                     _cod_estabelecimento = value;
+                }
+            }
+        }
+
+        public int CodWindow
+        {
+            get { return _cod_window; }
+            set
+            {
+                if (value == 0)
+                {
+                    throw new Exception("Tela Obrigatório, Favor informar");
+                }
+                else
+                {
+                    _cod_window = value;
                 }
             }
         }
@@ -117,14 +135,19 @@ namespace API.Models
                 query += $" and cod_usuario = {this.CodUsuario}";
             }
 
-            if (this.CodEmpresa > 0)
+            if (!String.IsNullOrEmpty(this.CodEmpresa))
             {
-                query += $" and cod_empresa = {this.CodEmpresa}";
+                query += $" and cod_empresa = '{this.CodEmpresa}'";
             }
 
             if (this.CodEstabelecimento > 0)
             {
                 query += $" and cod_estabelecimento = {this.CodEstabelecimento}";
+            }
+
+            if (this.CodWindow > 0)
+            {
+                query += $" and cod_window = {this.CodWindow}";
             }
 
             if (!String.IsNullOrEmpty(this.Apelido))
@@ -197,8 +220,9 @@ namespace API.Models
     public class AllConsultas
     {
         private int _cod_usuario;
-        private int _cod_empresa;
+        private string _cod_empresa;
         private int _cod_estabelecimento;
+        private int _cod_window;
         private string _query;
 
         public int CodUsuario
@@ -217,12 +241,12 @@ namespace API.Models
             }
         }
 
-        public int CodEmpresa
+        public string CodEmpresa
         {
             get { return _cod_empresa; }
             set
             {
-                if (value == 0)
+                if (String.IsNullOrEmpty(value))
                 {
                     throw new Exception("Empresa Obrigatório, Favor informar");
                 }
@@ -249,6 +273,22 @@ namespace API.Models
             }
         }
 
+        public int CodWindow
+        {
+            get { return _cod_window; }
+            set
+            {
+                if (value == 0)
+                {
+                    throw new Exception("Tela Obrigatório, Favor informar");
+                }
+                else
+                {
+                    _cod_window = value;
+                }
+            }
+        }
+
         private string getQueryCustomizacao()
         {
             var query = $"select * from acx_consulta_customizada where 1 = 1";
@@ -258,14 +298,19 @@ namespace API.Models
                 query += $" and cod_usuario = {this.CodUsuario}";
             }
 
-            if (this.CodEmpresa > 0)
+            if (!String.IsNullOrEmpty(this.CodEmpresa))
             {
-                query += $" and cod_empresa = {this.CodEmpresa}";
+                query += $" and cod_empresa = '{this.CodEmpresa}'";
             }
 
             if (this.CodEstabelecimento > 0)
             {
                 query += $" and cod_estabelecimento = {this.CodEstabelecimento}";
+            }
+
+            if (this.CodWindow > 0)
+            {
+                query += $" and cod_window = {this.CodWindow}";
             }
 
             return query;

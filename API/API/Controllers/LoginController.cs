@@ -1,14 +1,6 @@
 ﻿using System;
-using Microsoft;
-using Microsoft.AspNetCore.Authorization;
-using System.Collections.Generic;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Diagnostics;
-using API.Common;
-using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Configuration;
 
 namespace API.Controllers
 {
@@ -41,7 +33,7 @@ namespace API.Controllers
                         throw new Exception("Senha Obrigatório. Favor preencher");
                     }
 
-                    if (l.empresa == 0)
+                    if (String.IsNullOrEmpty(l.empresa))
                     {
                         throw new Exception("Empresa Obrigatório. Favor selecionar");
                     }
@@ -54,7 +46,7 @@ namespace API.Controllers
                     loginacx.Senha = l.senha.Trim(charsToTrim);
                     loginacx.Usuario = l.login.Trim(charsToTrim);
                     loginacx.CodEstabelecimento = l.estabelecimento;
-                    loginacx.CodEmpresa = l.empresa;
+                    loginacx.CodEmpresa = l.empresa.Trim(charsToTrim);
 
                     string query = loginacx.getQueryDadosUsuario();
                     conn.Query(query);
@@ -84,7 +76,7 @@ namespace API.Controllers
                             //c.getKey();
                             Acesso a = new Acesso();
                             a.cod_usuario = int.Parse(conn.getValueByName("cod_usuario"));
-                            a.cod_empresa = int.Parse(conn.getValueByName("cod_empresa"));
+                            a.cod_empresa = conn.getValueByName("cod_empresa");
                             a.cod_estabelecimento = int.Parse(conn.getValueByName("cod_estabelecimento"));
                             a.token = API.Commom.TokenService.GenerateToken(l);
 
@@ -284,14 +276,14 @@ namespace API.Controllers
             if (connLogin.Open())
             {
                 var query = $"select * from acx_controle_acessos " +
-                            $"  where cod_usuario = {a.cod_usuario} and cod_empresa = {a.cod_empresa} and cod_estabelecimento = {a.cod_estabelecimento}";
+                            $"  where cod_usuario = {a.cod_usuario} and cod_empresa = '{a.cod_empresa}' and cod_estabelecimento = {a.cod_estabelecimento}";
                 connLogin.Query(query);
 
                 connLogin.Begin();
                 if (connLogin.getRows() > 0)
                 {
                     query = $"delete from acx_controle_acessos " +
-                            $"  where cod_usuario = {a.cod_usuario} and cod_empresa = {a.cod_empresa} and cod_estabelecimento = {a.cod_estabelecimento}";
+                            $"  where cod_usuario = {a.cod_usuario} and cod_empresa = '{a.cod_empresa}' and cod_estabelecimento = {a.cod_estabelecimento}";
                     if (!connLogin.Execute(query))
                     {
                         connLogin.Rollback();
@@ -300,7 +292,7 @@ namespace API.Controllers
                 }
                 
                 query = $"insert into acx_controle_acessos(cod_usuario, cod_empresa, cod_estabelecimento, chave_acesso) " +
-                            $" values({a.cod_usuario}, {a.cod_empresa}, {a.cod_estabelecimento}, '{a.token}')";
+                            $" values({a.cod_usuario}, '{a.cod_empresa}', {a.cod_estabelecimento}, '{a.token}')";
                 if (!connLogin.Execute(query))
                 {
                     connLogin.Rollback();
