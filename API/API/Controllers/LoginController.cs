@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using API.Common;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 
 namespace API.Controllers
 {
@@ -16,6 +18,9 @@ namespace API.Controllers
         Retorno retorno = new Retorno();
         RetornoLogin retornoLogin = new RetornoLogin();
         DB conn = new DB();
+
+        //private readonly IConfiguration _config;
+        //public LoginController(IConfiguration config){ _config = config; }
 
         [HttpPost]
         public JsonResult getAuthorizeUser([FromBody] Login l)
@@ -112,6 +117,8 @@ namespace API.Controllers
         [HttpPost]
         public JsonResult getOptionLogin([FromBody] Login l)
         {
+            //var result = _config.GetValue<string>("ConnectionStrings:DefaultConnection");
+
             Loginacx.getVinculo login = new Loginacx.getVinculo();
             getVinculoRetornoLogin retorno = new getVinculoRetornoLogin();
             try
@@ -162,7 +169,6 @@ namespace API.Controllers
                     {
                         throw new Exception("Sua sessão expirou. Tivemos alguma falha ao direcionar para a tela de Login. Favor efetuar o logoff e login novamente");
                     }
-                    //retornoLogin = new RetornoLogin("Usuário ativo em outra sessão. Deseja encerrar as sessões ativas? ", "", true, status_sessao_ativa);
                 }
             }
             catch (Exception e)

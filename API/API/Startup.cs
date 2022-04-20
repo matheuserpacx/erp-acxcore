@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using API.Commom;
+using API.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -22,13 +23,14 @@ namespace API
     {
         public static Dictionary<string, string> Parametros = new Dictionary<string, string>();
 
+        private readonly IConfiguration _config;
+        public IConfiguration Configuration { get; }
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            API.Config.ConfigDB.Configurar();
+            _config = configuration;
+            //API.Config.ConfigDB.Configurar();
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -39,6 +41,26 @@ namespace API
             services.AddControllers();
 
             var key = Encoding.ASCII.GetBytes(Settings.Secret);
+            
+            services.Configure<DBConnection>(Configuration.GetSection("ParametrosAcx"));
+
+            Parametros["ConnectionString"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:DefaultConnection");
+            Parametros["database"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:database");
+            Parametros["host"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:host");
+            Parametros["user"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:user");
+            Parametros["pass"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:pass");
+            Parametros["dbname"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:dbname");
+            Parametros["dbport"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:dbport");
+            Parametros["locale"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:locale");
+            Parametros["protocol"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:protocol");
+            Parametros["server"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:server");
+            Parametros["sid"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:sid");
+
+            Parametros["reenviar_notif_erro"] = _config.GetValue<string>("ParametrosAcx:Parametros:reenviar_notif_erro");
+            Parametros["ativar_notificacoes"] = _config.GetValue<string>("ParametrosAcx:Parametros:ativar_notificacoes");
+            Parametros["ativar_log_query"] = _config.GetValue<string>("ParametrosAcx:Parametros:ativar_log_query");
+            Parametros["ativar_log"] = _config.GetValue<string>("ParametrosAcx:Parametros:ativar_log");
+
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

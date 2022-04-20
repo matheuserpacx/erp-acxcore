@@ -14,63 +14,6 @@ namespace API
 {
     class Sistema
     {
-        public static bool ReadConfig()
-        {
-            try
-            {
-                DB Conn = new DB();
-                var Diretorio = Sistema.RootPath();
-                String config = Diretorio + "Config.ini";
-                Array ini = File.ReadAllLines(config);
-                String valor = "";
-                String campo = "";
-                foreach (string file2 in ini)
-                {
-                    var file = file2;
-                    for (int i = 0; i <= file.Length; i++)
-                    {
-                        if (i < file.Length)
-                        {
-                            if (file.Substring(i, 1) == "=")
-                            {
-                                valor = file.Substring(i + 1, (file.Length - (i + 1)));
-                                campo = file.Substring(0, i);
-                                break;
-                            }
-                        }
-                    }
-                    if (campo != "")
-                    {
-                        if (campo.Substring(0, 1) == "#")
-                        {
-                            continue;
-                        }
-                        switch (campo)
-                        {
-                            case "[PARAMETROS]":
-                                break;
-                            default:
-                                if (Startup.Parametros.ContainsKey(campo))
-                                {
-                                    Startup.Parametros[campo] = valor;
-                                }
-                                else
-                                {
-                                    Startup.Parametros.Add(campo, valor);
-                                }
-                                Conn.debug("LEITURA Config.ini CRIADO PARAMETRO: " + campo + " = " + valor);
-                                break;
-                        }
-                    }
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-        }
-
         public static string EncodeBase64(string Character)
         {
             try

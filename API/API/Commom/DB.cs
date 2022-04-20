@@ -8,17 +8,22 @@ using System.Data.SqlClient;
 using System.Web;
 using System.Globalization;
 using System.Threading;
+using API.Models;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 
 namespace API
 {
     public class DB
     {
+        private readonly IConfiguration _config;
 
         public IDbConnection Conn;
         public IDataReader dr;
         public IDbTransaction Transacao;
         public DataTable dt = new DataTable();
         public DataTable par = new DataTable();
+        public String ConnectionString = "";
         public String DATABASE = "";
         public String DBAlternativo = string.Empty;
         public String ConnString = "";
@@ -38,14 +43,8 @@ namespace API
 
         public bool Open(string id_empresa = null)
         {
-
             try
             {
-                if (!Sistema.ReadConfig())
-                {
-
-                }
-
                 try
                 {
                     if (this.Status())
@@ -55,7 +54,7 @@ namespace API
                 }
                 catch { }
 
-                if (!(this.ReadConfig()))
+                if (!this.ReadConfig())
                 {
                     throw new Exception("Falha ao efetuar leitura das configurações de conexão. ");
                 }
@@ -71,27 +70,27 @@ namespace API
                 switch (this.DATABASE.ToUpper())
                 {
                     case "MYSQL":
-                        ConnString = "Server=" + this.HOST + ";Port=" + this.DBPORT + ";Database=" + this.DBNAME + ";Uid=" + this.USER + ";Pwd=" + this.PASS + ";Pooling=True;CharSet=utf8;Connection Timeout=300;Default Command Timeout=300;";
+                        ConnString = this.ConnectionString;//"Server=" + this.HOST + ";Port=" + this.DBPORT + ";Database=" + this.DBNAME + ";Uid=" + this.USER + ";Pwd=" + this.PASS + ";Pooling=True;CharSet=utf8;Connection Timeout=300;Default Command Timeout=300;";
                         AssemblyFile = Diretorio + "MySql.Data.dll";
                         AssemblyInstance = "MySql.Data.MySqlClient.MySqlConnection";
                         break;
                     case "SQLSERVER":
-                        ConnString = "Server=" + this.HOST + "," + this.DBPORT + ";Database=" + this.DBNAME + ";User Id=" + this.USER + ";Password=" + this.PASS;
+                        ConnString = this.ConnectionString;//"Server=" + this.HOST + "," + this.DBPORT + ";Database=" + this.DBNAME + ";User Id=" + this.USER + ";Password=" + this.PASS;
                         AssemblyFile = Diretorio + "System.Data.dll";
                         AssemblyInstance = "System.Data.SqlClient.SqlConnection";
                         break;
                     case "ORACLE":
-                        ConnString = "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=" + this.HOST + ")(PORT=" + this.DBPORT + "))(CONNECT_DATA=(SERVICE_NAME=" + this.SID + ")));User Id=" + this.USER + ";Password=" + this.PASS + ";Min Pool Size=10;Connection Lifetime=120;Connection Timeout=60;Incr Pool Size=5;Decr Pool Size=2";
+                        ConnString = this.ConnectionString;//"Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=" + this.HOST + ")(PORT=" + this.DBPORT + "))(CONNECT_DATA=(SERVICE_NAME=" + this.SID + ")));User Id=" + this.USER + ";Password=" + this.PASS + ";Min Pool Size=10;Connection Lifetime=120;Connection Timeout=60;Incr Pool Size=5;Decr Pool Size=2";
                         AssemblyFile = Diretorio + "Oracle.ManagedDataAccess.dll";
                         AssemblyInstance = "Oracle.ManagedDataAccess.Client.OracleConnection";
                         break;
                     case "POSTGRESQL":
-                        ConnString = "Server=" + this.HOST + ";Port=" + this.DBPORT + ";User Id=" + this.USER + ";Password=" + this.PASS + ";Database=" + this.DBNAME + ";";
-                        AssemblyFile = Diretorio + "/Npgsql.dll";
+                        ConnString = this.ConnectionString;//$"Server={this.HOST};Port={this.DBPORT};User Id={this.USER};Password={this.PASS};Database={this.DBNAME};";
+                        AssemblyFile = $"{Diretorio}Npgsql.dll";
                         AssemblyInstance = "Npgsql.NpgsqlConnection";//System.Data.SqlClient.SqlClientFactory
                         break;
                     default:
-                        throw new Exception("Banco de dados " + this.DATABASE.ToUpper() + " não suportado.");
+                        throw new Exception($"Banco de dados {this.DATABASE.ToUpper()} não suportado.");
                 }
                 this.Conn = (IDbConnection)Assembly.LoadFrom(AssemblyFile).CreateInstance(AssemblyInstance);
                 this.Conn.ConnectionString = ConnString;
@@ -139,11 +138,6 @@ namespace API
             try
             {
 
-                if (!Sistema.ReadConfig())
-                {
-
-                }
-
                 try
                 {
                     if (this.Status())
@@ -160,27 +154,27 @@ namespace API
                 switch (this.DATABASE.ToUpper())
                 {
                     case "MYSQL":
-                        ConnString = "Server=" + this.HOST + ";Port=" + this.DBPORT + ";Database=" + this.DBNAME + ";Uid=" + this.USER + ";Pwd=" + this.PASS + ";Pooling=True;CharSet=utf8;Connection Timeout=300;Default Command Timeout=300;";
+                        ConnString = this.ConnectionString;//"Server=" + this.HOST + ";Port=" + this.DBPORT + ";Database=" + this.DBNAME + ";Uid=" + this.USER + ";Pwd=" + this.PASS + ";Pooling=True;CharSet=utf8;Connection Timeout=300;Default Command Timeout=300;";
                         AssemblyFile = Diretorio + "MySql.Data.dll";
                         AssemblyInstance = "MySql.Data.MySqlClient.MySqlConnection";
                         break;
                     case "SQLSERVER":
-                        ConnString = "Server=" + this.HOST + "," + this.DBPORT + ";Database=" + this.DBNAME + ";User Id=" + this.USER + ";Password=" + this.PASS;
+                        ConnString = this.ConnectionString;//"Server=" + this.HOST + "," + this.DBPORT + ";Database=" + this.DBNAME + ";User Id=" + this.USER + ";Password=" + this.PASS;
                         AssemblyFile = Diretorio + "System.Data.dll";
                         AssemblyInstance = "System.Data.SqlClient.SqlConnection";
                         break;
                     case "ORACLE":
-                        ConnString = "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=" + this.HOST + ")(PORT=" + this.DBPORT + "))(CONNECT_DATA=(SERVICE_NAME=" + this.SID + ")));User Id=" + this.USER + ";Password=" + this.PASS + ";Min Pool Size=10;Connection Lifetime=120;Connection Timeout=60;Incr Pool Size=5;Decr Pool Size=2";
+                        ConnString = this.ConnectionString;//"Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=" + this.HOST + ")(PORT=" + this.DBPORT + "))(CONNECT_DATA=(SERVICE_NAME=" + this.SID + ")));User Id=" + this.USER + ";Password=" + this.PASS + ";Min Pool Size=10;Connection Lifetime=120;Connection Timeout=60;Incr Pool Size=5;Decr Pool Size=2";
                         AssemblyFile = Diretorio + "Oracle.ManagedDataAccess.dll";
                         AssemblyInstance = "Oracle.ManagedDataAccess.Client.OracleConnection";
                         break;
                     case "POSTGRESQL":
-                        ConnString = $"Server={this.HOST};Port={this.DBPORT};User Id={this.USER};Password={this.PASS};Database={this.DBNAME};";
+                        ConnString = this.ConnectionString;//$"Server={this.HOST};Port={this.DBPORT};User Id={this.USER};Password={this.PASS};Database={this.DBNAME};";
                         AssemblyFile = $"{Diretorio}Npgsql.dll";
                         AssemblyInstance = "Npgsql.NpgsqlConnection";//System.Data.SqlClient.SqlClientFactory
                         break;
                     default:
-                        throw new Exception("Banco de dados " + this.DATABASE.ToUpper() + " não suportado.");
+                        throw new Exception($"Banco de dados {this.DATABASE.ToUpper()} não suportado.");
                 }
                 this.Conn = (IDbConnection)Assembly.LoadFrom(AssemblyFile).CreateInstance(AssemblyInstance);
                 this.Conn.ConnectionString = ConnString;
@@ -231,78 +225,24 @@ namespace API
             }
             catch { }
         }
+
         public bool ReadConfig()
         {
             try
             {
-                var Diretorio = Sistema.RootPath();
-                String config = Diretorio + "/DBConfig.ini";
-                Array ini = File.ReadAllLines(config);
-                String valor = "";
-                String campo = "";
-                foreach (string file2 in ini)
-                {
-                    var file = file2;
-                    for (int i = 0; i <= file.Length; i++)
-                    {
-                        if (i < file.Length)
-                        {
-                            if (file.Substring(i, 1) == "=")
-                            {
-                                valor = file.Substring(i + 1, (file.Length - (i + 1)));
-                                campo = file.Substring(0, i);
-                                break;
-                            }
-                        }
-                    }
-                    if (campo != "")
-                    {
-                        if (campo.Substring(0, 1) == "#")
-                        {
-                            continue;
-                        }
-                        switch (campo)
-                        {
-                            case "[CONNECTION SETTINGS]":
-                                break;
-                            case "DATABASE":
-                                this.DATABASE = valor;
-                                break;
-                            case "HOST":
-                                this.HOST = valor;
-                                break;
-                            case "USER":
-                                this.USER = valor;
-                                break;
-                            case "PASS":
-                                this.PASS = valor;//Sistema.DecodeBase64(valor);
-                                break;
-                            case "DBNAME":
-                                this.DBNAME = valor;
-                                break;
-                            case "DBPORT":
-                                this.DBPORT = valor;
-                                break;
-                            case "LOCALE":
-                                this.LOCALE = valor;
-                                break;
-                            case "PROTOCOL":
-                                this.PROTOCOL = valor;
-                                break;
-                            case "SERVER":
-                                this.SERVER = valor;
-                                break;
-                            case "SID":
-                                this.SID = valor;
-                                break;
-                            case "ERPNAME":
-                                this.ERPNAME = valor;
-                                break;
-                            default:
-                                throw new Exception("Parâmetro " + campo + " não foi reconhecido nas configurações de conexão com banco de dados.");
-                        }
-                    }
-                }
+                this.ConnectionString = (Startup.Parametros.ContainsKey("ConnectionString")) ? Startup.Parametros["ConnectionString"] : "";
+                this.DATABASE = (Startup.Parametros.ContainsKey("database")) ? Startup.Parametros["database"] : "";
+                this.HOST = (Startup.Parametros.ContainsKey("host")) ? Startup.Parametros["host"] : "";
+                this.USER = (Startup.Parametros.ContainsKey("user")) ? Startup.Parametros["user"] : "";
+                this.PASS = (Startup.Parametros.ContainsKey("pass")) ? Sistema.DecodeBase64(Startup.Parametros["pass"]) : "";
+                this.DBNAME = (Startup.Parametros.ContainsKey("dbname")) ? Startup.Parametros["dbname"] : "";
+                this.DBPORT = (Startup.Parametros.ContainsKey("dbport")) ? Startup.Parametros["dbport"] : "";
+                this.LOCALE = (Startup.Parametros.ContainsKey("locale")) ? Startup.Parametros["locale"] : "";
+                this.PROTOCOL = (Startup.Parametros.ContainsKey("protocol")) ? Startup.Parametros["protocol"] : "";
+                this.SERVER = (Startup.Parametros.ContainsKey("server")) ? Startup.Parametros["server"] : "";
+                this.SID = (Startup.Parametros.ContainsKey("sid")) ? Startup.Parametros["sid"] : "";
+                this.SID = (Startup.Parametros.ContainsKey("erpname")) ? Startup.Parametros["erpname"] : "";
+
                 return true;
             }
             catch (Exception e)
