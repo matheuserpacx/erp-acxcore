@@ -1,15 +1,8 @@
 ﻿using System;
-using Microsoft;
 using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Diagnostics;
-using API.Models;
-using API.Common;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace API.Controllers
 {
@@ -22,7 +15,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize]
-        public JsonResult insert([FromBody] Customizacao consulta)
+        public JsonResult insert([FromBody] ConsultaInfos consulta)
         {
             try
             {
@@ -39,14 +32,15 @@ namespace API.Controllers
                     c.CodEstabelecimento = int.Parse(estab.Value);
                     c.Query = consulta.query;
                     c.Apelido = consulta.apelido_consulta;
+                    c.CodWindow = consulta.cod_window;
                     if (c.validaCustomizacaoExistente())
                     {
                         throw new Exception("Consulta já registrada. Inclusão cancelada");
                     }
 
                     conn.Begin();
-                    query = $"insert into acx_consulta_customizada(cod_usuario, cod_empresa, cod_estabelecimento, apelido_consulta, consulta)" +
-                            $" values({c.CodUsuario}, {c.CodEmpresa}, {c.CodEstabelecimento}, '{consulta.apelido_consulta}', '{consulta.query}')";
+                    query = $"insert into acx_consulta_customizada(cod_usuario, cod_empresa, cod_estabelecimento, cod_window, apelido_consulta, consulta)" +
+                            $" values({c.CodUsuario}, {c.CodEmpresa}, {c.CodEstabelecimento}, {c.CodWindow}, '{consulta.apelido_consulta}', '{consulta.query}')";
                     if (!conn.Execute(query))
                     {
                         throw new Exception($"Inclusão cancelada. Não foi possivel continuar com o cadastro. {conn.ErrorMsg}");
@@ -70,7 +64,7 @@ namespace API.Controllers
 
         [HttpPut]
         [Authorize]
-        public JsonResult update([FromBody] Customizacao consulta)
+        public JsonResult update([FromBody] ConsultaInfos consulta)
         {
             try
             {
@@ -119,9 +113,9 @@ namespace API.Controllers
             return Json(retorno);
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize]
-        public JsonResult consulta()
+        public JsonResult consultaAll([FromBody] ConsultaInfos consulta)
         {
             dynamic emp = User.FindFirst("empresa");
             dynamic estab = User.FindFirst("estabelecimento");
@@ -137,6 +131,7 @@ namespace API.Controllers
                     c.CodEmpresa = int.Parse(emp.Value);
                     c.CodEstabelecimento = int.Parse(estab.Value);
                     c.CodUsuario = int.Parse(cod_usu.Value);
+                    c.CodWindow = consulta.cod_window;
 
                     retornoCustomizacao.listaConsulta = c.returnConsulta();
                 }
@@ -189,7 +184,7 @@ namespace API.Controllers
 
         [HttpDelete]
         [Authorize]
-        public JsonResult delete([FromBody] Customizacao consulta)
+        public JsonResult delete([FromBody] ConsultaInfos consulta)
         {
             dynamic emp = User.FindFirst("empresa");
             dynamic estab = User.FindFirst("estabelecimento");

@@ -1,12 +1,6 @@
 ﻿using System;
-using Microsoft;
-using Microsoft.AspNetCore.Authorization;
-using System.Collections.Generic;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Diagnostics;
-using API.Common;
 
 namespace API.Controllers
 {

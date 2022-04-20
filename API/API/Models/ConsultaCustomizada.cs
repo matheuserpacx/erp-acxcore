@@ -9,9 +9,10 @@ using System.Dynamic;
 
 namespace API.Models
 {
-    public class Customizacao
+    public class ConsultaInfos
     {
         public int cod_consulta { get; set; }
+        public int cod_window { get; set; }
         public string apelido_consulta { get; set; }
         public string query { get; set; }
     }
@@ -22,6 +23,7 @@ namespace API.Models
         private int _cod_usuario;
         private int _cod_empresa;
         private int _cod_estabelecimento;
+        private int _cod_window;
         private string _apelido_consulta;
         private string _query;
 
@@ -86,6 +88,22 @@ namespace API.Models
             }
         }
 
+        public int CodWindow
+        {
+            get { return _cod_window; }
+            set
+            {
+                if (value == 0)
+                {
+                    throw new Exception("Tela Obrigatório, Favor informar");
+                }
+                else
+                {
+                    _cod_window = value;
+                }
+            }
+        }
+
         public string Apelido
         {
             get { return _apelido_consulta; }
@@ -125,6 +143,11 @@ namespace API.Models
             if (this.CodEstabelecimento > 0)
             {
                 query += $" and cod_estabelecimento = {this.CodEstabelecimento}";
+            }
+
+            if (this.CodWindow > 0)
+            {
+                query += $" and cod_window = {this.CodWindow}";
             }
 
             if (!String.IsNullOrEmpty(this.Apelido))
@@ -199,6 +222,7 @@ namespace API.Models
         private int _cod_usuario;
         private int _cod_empresa;
         private int _cod_estabelecimento;
+        private int _cod_window;
         private string _query;
 
         public int CodUsuario
@@ -249,6 +273,22 @@ namespace API.Models
             }
         }
 
+        public int CodWindow
+        {
+            get { return _cod_window; }
+            set
+            {
+                if (value == 0)
+                {
+                    throw new Exception("Tela Obrigatório, Favor informar");
+                }
+                else
+                {
+                    _cod_window = value;
+                }
+            }
+        }
+
         private string getQueryCustomizacao()
         {
             var query = $"select * from acx_consulta_customizada where 1 = 1";
@@ -266,6 +306,11 @@ namespace API.Models
             if (this.CodEstabelecimento > 0)
             {
                 query += $" and cod_estabelecimento = {this.CodEstabelecimento}";
+            }
+
+            if (this.CodWindow > 0)
+            {
+                query += $" and cod_window = {this.CodWindow}";
             }
 
             return query;

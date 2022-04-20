@@ -20,7 +20,8 @@ namespace API.Config
                 switch (versao)
                 {
                     case "01.000":
-                        dic_table.Add((idx++), "acx_login");
+                        dic_table.Add((idx++), "acx_versao");
+                        dic_table.Add((idx++), "acx_usuarios");
                         dic_table.Add((idx++), "acx_estabelecimento");
                         dic_table.Add((idx++), "acx_empresa");
                         dic_table.Add((idx++), "acx_vinculo_emp_estab");
@@ -77,6 +78,15 @@ namespace API.Config
                 Script.Add(versao, dic);
                 getTables(versao);
 
+                //VERSAO 01.002
+                dic = new Dictionary<int, string>();
+                idx = 0;
+
+                dic.Add((idx++), "alter table acx_consulta_customizada add column cod_window int, " +
+                                 "ADD CONSTRAINT acx_consulta_customizada_pk PRIMARY KEY (cod_consulta, cod_usuario, cod_empresa, cod_estabelecimento, cod_window)");
+                versao = $"01.{(ver++).ToString().PadLeft(3, '0')}";
+                Script.Add(versao, dic);
+
             return Script;
             }
 
@@ -94,8 +104,8 @@ namespace API.Config
                         var sel = $"select versao_atual, release_atual from {nametableversao}";
                         conn.Query(sel);
 
-                        var versao_ant = conn.addZeroes(int.Parse(conn.getValueByName("versao_atual")), 3);
-                        var release_ant = conn.addZeroes(int.Parse(conn.getValueByName("release_atual")), 3);
+                        var versao_ant = (String.IsNullOrEmpty(conn.getValueByName("versao_atual").ToString())) ? "000" : conn.addZeroes(int.Parse(conn.getValueByName("versao_atual")), 3);
+                        var release_ant = (String.IsNullOrEmpty(conn.getValueByName("release_atual").ToString())) ? "000" : conn.addZeroes(int.Parse(conn.getValueByName("release_atual")), 3);
                         var upd = $"UPDATE {nametableversao} SET versao_ant = {versao_ant}, release_ant = {release_ant} WHERE 1=1";
                         conn.Execute(upd);
 
