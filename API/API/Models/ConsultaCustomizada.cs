@@ -21,7 +21,7 @@ namespace API.Models
     {
         private int _cod_consulta;
         private int _cod_usuario;
-        private int _cod_empresa;
+        private string _cod_empresa;
         private int _cod_estabelecimento;
         private int _cod_window;
         private string _apelido_consulta;
@@ -56,12 +56,12 @@ namespace API.Models
             }
         }
 
-        public int CodEmpresa
+        public string CodEmpresa
         {
             get { return _cod_empresa; }
             set
             {
-                if (value == 0)
+                if (String.IsNullOrEmpty(value))
                 {
                     throw new Exception("Empresa Obrigatório, Favor informar");
                 }
@@ -135,9 +135,9 @@ namespace API.Models
                 query += $" and cod_usuario = {this.CodUsuario}";
             }
 
-            if (this.CodEmpresa > 0)
+            if (!String.IsNullOrEmpty(this.CodEmpresa))
             {
-                query += $" and cod_empresa = {this.CodEmpresa}";
+                query += $" and cod_empresa = '{this.CodEmpresa}'";
             }
 
             if (this.CodEstabelecimento > 0)
@@ -220,7 +220,7 @@ namespace API.Models
     public class AllConsultas
     {
         private int _cod_usuario;
-        private int _cod_empresa;
+        private string _cod_empresa;
         private int _cod_estabelecimento;
         private int _cod_window;
         private string _query;
@@ -241,12 +241,12 @@ namespace API.Models
             }
         }
 
-        public int CodEmpresa
+        public string CodEmpresa
         {
             get { return _cod_empresa; }
             set
             {
-                if (value == 0)
+                if (String.IsNullOrEmpty(value))
                 {
                     throw new Exception("Empresa Obrigatório, Favor informar");
                 }
@@ -298,9 +298,9 @@ namespace API.Models
                 query += $" and cod_usuario = {this.CodUsuario}";
             }
 
-            if (this.CodEmpresa > 0)
+            if (!String.IsNullOrEmpty(this.CodEmpresa))
             {
-                query += $" and cod_empresa = {this.CodEmpresa}";
+                query += $" and cod_empresa = '{this.CodEmpresa}'";
             }
 
             if (this.CodEstabelecimento > 0)

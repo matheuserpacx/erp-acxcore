@@ -12,7 +12,7 @@ namespace API.Models
         public string login { get; set; }
         public string nom_usuario  { get; set; }
         public string senha { get; set; }
-        public int empresa { get; set; }
+        public string empresa { get; set; }
         public string nom_empresa { get; set; }
         public int estabelecimento { get; set; }
         public string nom_estabelecimento { get; set; }
@@ -21,14 +21,14 @@ namespace API.Models
     public class Acesso
     {
         public int cod_usuario { get; set; }
-        public int cod_empresa { get; set; }    
+        public string cod_empresa { get; set; }    
         public int cod_estabelecimento { get; set; }
         public string token { get; set; }
     }
 
     public class Empresa
     {
-        public int cod_empresa { get; set; }
+        public string cod_empresa { get; set; }
         public string nom_empresa { get; set; }
         public List<Estabelecimento> listaEstabelecimento { get; set; }
     }
@@ -50,7 +50,7 @@ namespace API.Models
     {
         private int _cod_acesso;
         private int _cod_usuario;
-        private int _cod_empresa;
+        private string _cod_empresa;
         private int _cod_estabelecimento;
         private string _token;
         private string _usuario;
@@ -67,7 +67,7 @@ namespace API.Models
             set { _cod_usuario = value; }
         }
 
-        public int CodEmpresa
+        public string CodEmpresa
         {
             get { return _cod_empresa; }
             set { _cod_empresa = value; }
@@ -105,9 +105,9 @@ namespace API.Models
                 query += $" and cod_usuario = {this.CodUsuario}";
             }
 
-            if (this.CodEmpresa > 0)
+            if (!String.IsNullOrEmpty(this.CodEmpresa))
             {
-                query += $" and cod_empresa = {this.CodEmpresa}";
+                query += $" and cod_empresa = '{this.CodEmpresa}'";
             }
 
             if (this.CodEstabelecimento > 0)
@@ -141,7 +141,7 @@ namespace API.Models
                            $"   AND d.senha = '{this.Senha}'" +
                            $"   AND d.status_ativo = 'S'" +
                            $"   and b.cod_estabelecimento = {this.CodEstabelecimento}" +
-                           $"   and a.cod_empresa = {this.CodEmpresa}";
+                           $"   and a.cod_empresa = '{this.CodEmpresa}'";
 
             return query;
         }
@@ -154,9 +154,9 @@ namespace API.Models
                 query += $" and cod_usuario = {this.CodUsuario}";
             }
 
-            if (this.CodEmpresa > 0)
+            if (!String.IsNullOrEmpty(this.CodEmpresa))
             {
-                query += $" and cod_empresa = {this.CodEmpresa}";
+                query += $" and cod_empresa = '{this.CodEmpresa}'";
             }
 
             if (this.CodEstabelecimento > 0)
@@ -264,7 +264,7 @@ namespace API.Models
                         vinculo.cod_usuario = int.Parse(connVinculo.getValueByName("cod_usuario"));
                         vinculo.nom_usuario = connVinculo.getValueByName("nom_usuario");
 
-                        query = $"select a.*, b.nom_empresa " +
+                        query = $"select a.*, b.descricao " +
                                 $" from acx_vinculo_usuario_emp a, " +
                                 $" acx_empresa b " +
                                 $" where a.cod_empresa = b.cod_empresa " +
@@ -279,10 +279,10 @@ namespace API.Models
                                 Empresa emp = new Empresa();
                                 emp.listaEstabelecimento = new List<Estabelecimento>();
 
-                                emp.cod_empresa = int.Parse(row["cod_empresa"].ToString());
-                                emp.nom_empresa = row["nom_empresa"].ToString();
+                                emp.cod_empresa = row["cod_empresa"].ToString();
+                                emp.nom_empresa = row["descricao"].ToString();
 
-                                query = $"select cod_estabelecimento, nom_estabelecimento from acx_estabelecimento where cod_empresa = {emp.cod_empresa}";
+                                query = $"select cod_estabelecimento, nom_estabelecimento from acx_estabelecimento where cod_empresa = '{emp.cod_empresa}'";
                                 DataTable dadosEstab = connVinculo.getDataTable(query);
 
                                 linhas = dadosEstab.Rows.Count;
@@ -338,7 +338,7 @@ namespace API.Models
                     {
                         this.CodAcesso = int.Parse(connAcesso.getValueByName("cod_acesso"));
                         this.CodUsuario = int.Parse(connAcesso.getValueByName("cod_usuario"));
-                        this.CodEmpresa = int.Parse(connAcesso.getValueByName("cod_empresa"));
+                        this.CodEmpresa = connAcesso.getValueByName("cod_empresa");
                         this.CodEstabelecimento = int.Parse(connAcesso.getValueByName("cod_estabelecimento"));
                         this.Token = connAcesso.getValueByName("chave_acesso");
                     }

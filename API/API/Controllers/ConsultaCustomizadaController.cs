@@ -27,7 +27,7 @@ namespace API.Controllers
 
                     var query = "";
                     ConsultaCustomizada c = new ConsultaCustomizada();
-                    c.CodEmpresa = int.Parse(emp.Value);
+                    c.CodEmpresa = emp.Value;
                     c.CodUsuario = int.Parse(cod_usu.Value);
                     c.CodEstabelecimento = int.Parse(estab.Value);
                     c.Query = consulta.query;
@@ -76,7 +76,7 @@ namespace API.Controllers
 
                     var query = "";
                     ConsultaCustomizada c = new ConsultaCustomizada();
-                    c.CodEmpresa = int.Parse(emp.Value);
+                    c.CodEmpresa = emp.Value;
                     c.CodUsuario = int.Parse(cod_usu.Value);
                     c.CodEstabelecimento = int.Parse(estab.Value);
                     c.CodConsulta = consulta.cod_consulta;
@@ -89,7 +89,7 @@ namespace API.Controllers
                     conn.Begin();
                     query = $"update acx_consulta_customizada set apelido_consulta = '{consulta.apelido_consulta}', consulta = '{consulta.query}' " +
                             $" where cod_usuario = {c.CodUsuario} " +
-                            $" and cod_empresa = {c.CodEmpresa} " +
+                            $" and cod_empresa = '{c.CodEmpresa}' " +
                             $" and cod_estabelecimento = {c.CodEstabelecimento} " +
                             $" and cod_consulta = {consulta.cod_consulta}";
                     if (!conn.Execute(query))
@@ -121,19 +121,15 @@ namespace API.Controllers
             dynamic estab = User.FindFirst("estabelecimento");
             dynamic cod_usu = User.FindFirst("cod_usuario");
 
-            getCustomizacaoRetorno retornoCustomizacao = new getCustomizacaoRetorno();
-            retornoCustomizacao.listaConsulta = new List<Dictionary<string, string>>();
             try
             {
                 if (conn.Open())
                 {
                     AllConsultas c = new AllConsultas();    
-                    c.CodEmpresa = int.Parse(emp.Value);
+                    c.CodEmpresa = emp.Value;
                     c.CodEstabelecimento = int.Parse(estab.Value);
                     c.CodUsuario = int.Parse(cod_usu.Value);
                     c.CodWindow = consulta.cod_window;
-
-                    retornoCustomizacao.listaConsulta = c.returnConsulta();
                 }
                 else
                 {
@@ -145,12 +141,12 @@ namespace API.Controllers
                 retorno = new Retorno("", e.Message, false);
                 return Json(retorno);
             }
-            return Json(retornoCustomizacao);
+            return Json(retorno);
         }
 
         [HttpPost]
         [Authorize]
-        public JsonResult consulta([FromBody] int cod_consulta)
+        public JsonResult consulta([FromBody] ConsultaInfos consulta)
         {
             dynamic emp = User.FindFirst("empresa");
             dynamic estab = User.FindFirst("estabelecimento");
@@ -163,8 +159,8 @@ namespace API.Controllers
                 if (conn.Open())
                 {
                     ConsultaCustomizada c = new ConsultaCustomizada();
-                    c.CodConsulta = cod_consulta;
-                    c.CodEmpresa = int.Parse(emp.Value);
+                    c.CodConsulta = consulta.cod_consulta;
+                    c.CodEmpresa = emp.Value;
                     c.CodEstabelecimento = int.Parse(estab.Value);
                     c.CodUsuario = int.Parse(cod_usu.Value);
 
@@ -196,7 +192,7 @@ namespace API.Controllers
                 {
                     var query = "";
                     ConsultaCustomizada c = new ConsultaCustomizada();
-                    c.CodEmpresa = int.Parse(emp.Value);
+                    c.CodEmpresa = emp.Value;
                     c.CodUsuario = int.Parse(cod_usu.Value);
                     c.CodEstabelecimento = int.Parse(estab.Value);
                     c.Query = consulta.query;
@@ -211,7 +207,7 @@ namespace API.Controllers
                     conn.Begin();
                     query = $"delete from acx_consulta_customizada " +
                             $" where cod_usuario = {c.CodUsuario} " +
-                            $" and cod_empresa = {c.CodEmpresa} " +
+                            $" and cod_empresa = '{c.CodEmpresa}' " +
                             $" and cod_estabelecimento = {c.CodEstabelecimento} " +
                             $" and cod_consulta = {consulta.cod_consulta}" +
                             $" and apelido_consulta = '{consulta.apelido_consulta}'" +
