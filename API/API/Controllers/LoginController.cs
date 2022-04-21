@@ -11,9 +11,6 @@ namespace API.Controllers
         RetornoLogin retornoLogin = new RetornoLogin();
         DB conn = new DB();
 
-        //private readonly IConfiguration _config;
-        //public LoginController(IConfiguration config){ _config = config; }
-
         [HttpPost]
         public JsonResult getAuthorizeUser([FromBody] Login l)
         {
@@ -72,8 +69,6 @@ namespace API.Controllers
                         }
                         else
                         {
-                            //Chave c = new Chave();
-                            //c.getKey();
                             Acesso a = new Acesso();
                             a.cod_usuario = int.Parse(conn.getValueByName("cod_usuario"));
                             a.cod_empresa = conn.getValueByName("cod_empresa");
@@ -109,8 +104,6 @@ namespace API.Controllers
         [HttpPost]
         public JsonResult getOptionLogin([FromBody] Login l)
         {
-            //var result = _config.GetValue<string>("ConnectionStrings:DefaultConnection");
-
             Loginacx.getVinculo login = new Loginacx.getVinculo();
             getVinculoRetornoLogin retorno = new getVinculoRetornoLogin();
             try

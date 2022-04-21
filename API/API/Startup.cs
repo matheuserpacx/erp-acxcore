@@ -44,17 +44,17 @@ namespace API
             
             services.Configure<DBConnection>(Configuration.GetSection("ParametrosAcx"));
 
-            Parametros["ConnectionString"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:DefaultConnection");
-            Parametros["database"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:database");
-            Parametros["host"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:host");
-            Parametros["user"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:user");
-            Parametros["pass"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:pass");
-            Parametros["dbname"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:dbname");
-            Parametros["dbport"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:dbport");
-            Parametros["locale"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:locale");
-            Parametros["protocol"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:protocol");
-            Parametros["server"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:server");
-            Parametros["sid"] = _config.GetValue<string>("ParametrosAcx:ConnectionStrings:sid");
+            Parametros["ConnectionString"] = _config.GetValue<string>("ParametrosAcx:ConnectionStringsPadrao:DefaultConnection");
+            Parametros["database"] = _config.GetValue<string>("ParametrosAcx:ConnectionStringsPadrao:database");
+            Parametros["host"] = _config.GetValue<string>("ParametrosAcx:ConnectionStringsPadrao:host");
+            Parametros["user"] = _config.GetValue<string>("ParametrosAcx:ConnectionStringsPadrao:user");
+            Parametros["pass"] = _config.GetValue<string>("ParametrosAcx:ConnectionStringsPadrao:pass");
+            Parametros["dbname"] = _config.GetValue<string>("ParametrosAcx:ConnectionStringsPadrao:dbname");
+            Parametros["dbport"] = _config.GetValue<string>("ParametrosAcx:ConnectionStringsPadrao:dbport");
+            Parametros["locale"] = _config.GetValue<string>("ParametrosAcx:ConnectionStringsPadrao:locale");
+            Parametros["protocol"] = _config.GetValue<string>("ParametrosAcx:ConnecConnectionStringsPadraotionStrings:protocol");
+            Parametros["server"] = _config.GetValue<string>("ParametrosAcx:ConnectionStringsPadrao:server");
+            Parametros["sid"] = _config.GetValue<string>("ParametrosAcx:ConnectionStringsPadrao:sid");
 
             Parametros["reenviar_notif_erro"] = _config.GetValue<string>("ParametrosAcx:Parametros:reenviar_notif_erro");
             Parametros["ativar_notificacoes"] = _config.GetValue<string>("ParametrosAcx:Parametros:ativar_notificacoes");
