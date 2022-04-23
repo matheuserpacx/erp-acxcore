@@ -8,6 +8,7 @@
       "sslPort": 0
     }
   },
+  
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
@@ -17,11 +18,27 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "DockerfileRunArguments": "-v $(pwd)/host-folder:/container-folder:ro",
+      "applicationUrl": "http://0.0.0.0:5000",
+      "environmentVariables": {
+        "ASPNETCORE_URLS": "https://+:443;http://+:5000;http://+:3000",
+        "ASPNETCORE_SERVER.URLS": "https://+:443;http://+:5000;http://+:3000",
+        "ASPNETCORE_HTTPS_PORT": "44360",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "httpPort": 5000,
+      "useSSL": true,
+      "sslPort": 44360
+    },
     "API": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "acx",
-      "applicationUrl": "http://localhost:5001",
+      "applicationUrl": "http://+:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
