@@ -23,14 +23,13 @@
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
       "DockerfileRunArguments": "-v $(pwd)/host-folder:/container-folder:ro",
-      "applicationUrl": "http://0.0.0.0:5000",
+      "applicationUrl": "http://0.0.0.0:3000",
       "environmentVariables": {
-        "ASPNETCORE_URLS": "https://+:443;http://+:5000;http://+:3000",
-        "ASPNETCORE_SERVER.URLS": "https://+:443;http://+:5000;http://+:3000",
+        "ASPNETCORE_URLS": "https://0.0.0.0:443;http://0.0.0.0:3000",
         "ASPNETCORE_HTTPS_PORT": "44360",
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "httpPort": 5000,
+      "httpPort": 3000,
       "useSSL": true,
       "sslPort": 44360
     },
