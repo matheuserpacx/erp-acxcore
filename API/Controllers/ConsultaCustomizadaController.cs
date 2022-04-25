@@ -32,7 +32,7 @@ namespace API.Controllers
                     c.CodEstabelecimento = int.Parse(estab.Value);
                     c.Query = consulta.query;
                     c.Apelido = consulta.apelido_consulta;
-                    c.CodWindow = consulta.cod_window;
+                    c.CodWindow = consulta.cod_tela;
                     if (c.validaCustomizacaoExistente())
                     {
                         throw new Exception("Consulta já registrada. Inclusão cancelada");
@@ -117,10 +117,12 @@ namespace API.Controllers
         [Authorize]
         public JsonResult consultaAll([FromBody] ConsultaInfos consulta)
         {
+            getCustomizacaoRetorno retornoCustomizacao = new getCustomizacaoRetorno();
+            retornoCustomizacao.listaConsulta = new List<Dictionary<string, string>>();
+
             dynamic emp = User.FindFirst("empresa");
             dynamic estab = User.FindFirst("estabelecimento");
             dynamic cod_usu = User.FindFirst("cod_usuario");
-
             try
             {
                 if (conn.Open())
@@ -129,7 +131,9 @@ namespace API.Controllers
                     c.CodEmpresa = emp.Value;
                     c.CodEstabelecimento = int.Parse(estab.Value);
                     c.CodUsuario = int.Parse(cod_usu.Value);
-                    c.CodWindow = consulta.cod_window;
+                    c.CodWindow = consulta.cod_tela;
+
+                    retornoCustomizacao.listaConsulta = c.returnConsulta();
                 }
                 else
                 {
@@ -138,10 +142,9 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                retorno = new Retorno("", e.Message, false);
-                return Json(retorno);
+                retornoCustomizacao = new getCustomizacaoRetorno("", e.Message, false);
             }
-            return Json(retorno);
+            return Json(retornoCustomizacao);
         }
 
         [HttpPost]

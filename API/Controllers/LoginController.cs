@@ -7,13 +7,12 @@ namespace API.Controllers
     public class LoginController : Controller
     {
         char[] charsToTrim = { '*', ' ', '\'' };
-        Retorno retorno = new Retorno();
-        RetornoLogin retornoLogin = new RetornoLogin();
         DB conn = new DB();
 
         [HttpPost]
         public JsonResult getAuthorizeUser([FromBody] Login l)
         {
+            RetornoLogin retornoLogin = new RetornoLogin();
             Loginacx loginacx = new Loginacx();
             bool status_sessao_ativa = false;
             try
@@ -129,6 +128,8 @@ namespace API.Controllers
         [HttpGet]
         public JsonResult verificaSessaoAtiva(string token)
         {
+            RetornoLogin retornoLogin = new RetornoLogin();
+
             if (String.IsNullOrEmpty(token))
             {
                 throw new Exception("Não foi possivel validar Token. Você será redirecionado para a tela de login.");
@@ -169,7 +170,8 @@ namespace API.Controllers
 
         public JsonResult encerraSessoesAtivasEmpEstab([FromBody] Login l)
         {
-            retorno = new Retorno("Acesso liberado. Favor tentar efetuar o login novamente.", "", true);
+            Retorno retorno = new Retorno();
+            retorno = new Retorno("Acesso liberado. Aguarde alguns instante que você será redirecionado.", "", true);
             Loginacx loginacx = new Loginacx();
             try
             {
@@ -224,6 +226,7 @@ namespace API.Controllers
         [HttpDelete]
         public JsonResult encerraSessoesAtivasToken(string token)
         {
+            Retorno retorno = new Retorno();
             retorno = new Retorno("Acesso liberado. Favor tentar efetuar o login novamente.", "", true);
 
             Loginacx loginacx = new Loginacx();
