@@ -12,7 +12,7 @@ namespace API.Models
     public class ConsultaInfos
     {
         public int cod_consulta { get; set; }
-        public int cod_window { get; set; }
+        public int cod_tela { get; set; }
         public string apelido_consulta { get; set; }
         public string query { get; set; }
     }
