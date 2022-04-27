@@ -136,11 +136,11 @@ namespace API.Models
         public string data { get; set; }
         public string controle10 { get; set; }
         public string controle9 { get; set; }
-        public string ssllib { get; set; }
+        public float ssllib { get; set; }
         public string caminhoarquivopfx { get; set; }
         public string numseriecertificado { get; set; }
         public string senhacertificado { get; set; }
-        public string formaprecisao { get; set; }
+        public int formaprecisao { get; set; }
     }
 
 
@@ -173,10 +173,16 @@ namespace API.Models
                 string nome = item.Name;
                 object valor = item.GetValue(emp, null);
 
-                if(!String.IsNullOrEmpty(valor.ToString()))
+                if (!String.IsNullOrEmpty(valor.ToString()))
                 {
+                    var newvalor = (item.PropertyType == typeof(string)) ? valor = $"'{valor}'" : valor;
+
                     into += (into.Length > 0) ? $", {nome}" : nome;
-                    values += (values.Length > 0) ? $", {valor}" : valor;
+                    values += (values.Length > 0) ? $", {newvalor}" : newvalor;
+                }
+                else
+                {
+                    continue;
                 }
             }
 
@@ -195,10 +201,14 @@ namespace API.Models
                 string nome = item.Name;
                 object valor = item.GetValue(emp, null);
 
-
                 if (!String.IsNullOrEmpty(valor.ToString()))
                 {
-                    update += (update.Length > 0) ? $", {nome} = {valor}" : $" set {nome} = {valor}";
+                    var newvalor = (item.PropertyType == typeof(string)) ? valor = $"'{valor}'" : valor;
+                    update += (update.Length > 0) ? $", {nome} = {newvalor}" : $" set {nome} = {newvalor}";
+                }
+                else
+                {
+                    continue;
                 }
             }
 
@@ -378,7 +388,7 @@ namespace API.Models
             return lista;
         }
 
-        public bool insert(Empresa emp)
+        public void insert(Empresa emp)
         {
             DB connInsert = new DB();
             bool status = true;
@@ -391,7 +401,7 @@ namespace API.Models
 
                     connInsert.Begin();
                     var query = $"INSERT INTO acx_empresa {valores.Item1} VALUES {valores.Item2}";
-                    if (connInsert.Execute(query))
+                    if (!connInsert.Execute(query))
                     {
                         throw new Exception($"Não foi possivel prosseguir com o cadastro de Empresa. ERRO -> {connInsert.ErrorMsg}");
                     }
@@ -410,10 +420,9 @@ namespace API.Models
 
             connInsert.Commit();
             connInsert.Close(); 
-            return status;
         }
 
-        public bool update(Empresa emp)
+        public void update(Empresa emp)
         {
             DB connUpdate = new DB();
             bool status = true;
@@ -428,7 +437,7 @@ namespace API.Models
 
                     if (String.IsNullOrEmpty(emp.cod_empresa))
                     {
-                       throw new Exception("Código da Empresa não Informado favor validar.");
+                        throw new Exception("Código da Empresa não Informado favor validar.");
                     }
 
                     var query = $"UPDATE acx_empresa {update} WHERE cod_empresa = {emp.cod_empresa}"; 
@@ -451,7 +460,6 @@ namespace API.Models
 
             connUpdate.Commit();
             connUpdate.Close();
-            return status;
         }
     }
 }

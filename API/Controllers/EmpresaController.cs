@@ -46,7 +46,7 @@ namespace API.Controllers
 
 
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public JsonResult InsertDadosEmpresa([FromBody] Empresa emp)
         {
             Retorno retorno = new Retorno();
@@ -60,7 +60,7 @@ namespace API.Controllers
                 if (conn.Open())
                 {
                     PrecessoQuery processar = new PrecessoQuery();
-                    status = processar.insert(emp);
+                    processar.insert(emp);
                 }
                 else
                 {
@@ -94,7 +94,7 @@ namespace API.Controllers
                 if (conn.Open())
                 {
                     PrecessoQuery processar = new PrecessoQuery();
-                    status = processar.update(emp);
+                    processar.update(emp);
                 }
                 else
                 {
