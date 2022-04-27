@@ -13,6 +13,7 @@ namespace API.Controllers
         public JsonResult getAuthorizeUser([FromBody] Login l)
         {
             RetornoLogin retornoLogin = new RetornoLogin();
+
             Loginacx loginacx = new Loginacx();
             bool status_sessao_ativa = false;
             try
@@ -93,7 +94,10 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                retornoLogin = new RetornoLogin("", e.Message, false, status_sessao_ativa);
+                retornoLogin.erro = e.Message;
+                retornoLogin.msg = "";
+                retornoLogin.status = false;
+                retornoLogin.status_sessao = status_sessao_ativa;
             }
 
             conn.Close();
@@ -105,6 +109,11 @@ namespace API.Controllers
         {
             Loginacx.getVinculo login = new Loginacx.getVinculo();
             getVinculoRetornoLogin retorno = new getVinculoRetornoLogin();
+
+            retorno.erro = "";
+            retorno.msg = "Processamento realizado com sucesso.";
+            retorno.status = true;
+
             try
             {
                 login.Login = l.login;
@@ -118,7 +127,9 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                retorno = new getVinculoRetornoLogin("", e.Message, false);
+                retorno.erro = e.Message;
+                retorno.msg = "";
+                retorno.status = false;
             }
 
             conn.Close();
@@ -136,7 +147,11 @@ namespace API.Controllers
             }
             token = token.Replace("Bearer ", "");
 
-            retornoLogin = new RetornoLogin("Sua sessão experiou. Você será encaminhado para a tela de login.", "", true, false);
+            retornoLogin.msg = "Sua sessão experiou. Você será encaminhado para a tela de login.";
+            retornoLogin.erro = "";
+            retornoLogin.status = true;
+            retornoLogin.status_sessao = false;
+
             Loginacx loginacx = new Loginacx();
             bool status_sessao_ativa = false;
             try
@@ -159,10 +174,11 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                retornoLogin = new RetornoLogin("", e.Message, false, status_sessao_ativa);
+                retornoLogin.erro = e.Message;
+                retornoLogin.msg = "";
+                retornoLogin.status = false;
+                retornoLogin.status_sessao = status_sessao_ativa;
             }
-
-
             return Json(retornoLogin);
         }
 

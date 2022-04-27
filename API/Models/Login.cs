@@ -26,7 +26,7 @@ namespace API.Models
         public string token { get; set; }
     }
 
-    public class Empresa
+    public class EmpresaLogin
     {
         public string cod_empresa { get; set; }
         public string nom_empresa { get; set; }
@@ -43,7 +43,7 @@ namespace API.Models
     {
         public int cod_usuario { get; set; }
         public string nom_usuario { get; set; }
-        public List<Empresa> listaEmpresa { get; set; }
+        public List<EmpresaLogin> listaEmpresa { get; set; }
     }
 
     public class Loginacx
@@ -230,7 +230,7 @@ namespace API.Models
                 DB connVinculo = new DB();
                 List<Vinculo> list = new List<Vinculo>();
                 Vinculo vinculo = new Vinculo();
-                vinculo.listaEmpresa = new List<Empresa>();
+                vinculo.listaEmpresa = new List<EmpresaLogin>();
 
                 string query;
 
@@ -276,7 +276,7 @@ namespace API.Models
                         {
                             foreach (DataRow row in dadosEmp.Rows)
                             {
-                                Empresa emp = new Empresa();
+                                EmpresaLogin emp = new EmpresaLogin();
                                 emp.listaEstabelecimento = new List<Estabelecimento>();
 
                                 emp.cod_empresa = row["cod_empresa"].ToString();

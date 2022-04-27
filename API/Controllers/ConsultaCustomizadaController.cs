@@ -118,6 +118,11 @@ namespace API.Controllers
         public JsonResult consultaAll([FromBody] ConsultaInfos consulta)
         {
             getCustomizacaoRetorno retornoCustomizacao = new getCustomizacaoRetorno();
+
+            retornoCustomizacao.erro = "";
+            retornoCustomizacao.msg = "Processamento realizado com sucesso.";
+            retornoCustomizacao.status = true;
+
             retornoCustomizacao.listaConsulta = new List<Dictionary<string, string>>();
 
             dynamic emp = User.FindFirst("empresa");
@@ -142,7 +147,9 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                retornoCustomizacao = new getCustomizacaoRetorno("", e.Message, false);
+                retornoCustomizacao.erro = e.Message;
+                retornoCustomizacao.msg = "";
+                retornoCustomizacao.status = false;
             }
             return Json(retornoCustomizacao);
         }
@@ -156,6 +163,11 @@ namespace API.Controllers
             dynamic cod_usu = User.FindFirst("cod_usuario");
 
             getCustomizacaoRetorno retornoCustomizacao = new getCustomizacaoRetorno();
+
+            retornoCustomizacao.erro = "";
+            retornoCustomizacao.msg = "Processamento realizado com sucesso.";
+            retornoCustomizacao.status = true;
+
             retornoCustomizacao.listaConsulta = new List<Dictionary<string, string>>();
             try
             {
@@ -176,7 +188,9 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                retornoCustomizacao = new getCustomizacaoRetorno("", e.Message, false);
+                retornoCustomizacao.erro = e.Message;
+                retornoCustomizacao.msg = "";
+                retornoCustomizacao.status = false;
             }
             return Json(retornoCustomizacao);
         }

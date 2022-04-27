@@ -19,87 +19,36 @@ namespace API.Models
         }
     }
 
-    public class RetornoLogin
+    public class RetornoLogin : Retorno
     {
-        public RetornoLogin(string r_msg = "Processamento Realizado com Sucesso.", string r_erro = "", bool r_status = true, bool r_status_sessao = false)
-        {
-            this.msg = r_msg;
-            this.erro = r_erro;
-            this.status = r_status;
-            this.status_sessao = r_status_sessao;
-        }
-
-        public string msg { get; set; }
-
-        public string erro { get; set; }
-
-        public bool status { get; set; }
-
         public bool status_sessao { get; set; } // Variavel para informar que ja existe uma sessao ativa em outro navegador ou computador (login/empresa/estabelecimento)
 
         public string token { get; set; }
         public Object user { get; set; }   
     }
 
-    public class getVinculoAllRetornoLogin
+    public class getVinculoAllRetornoLogin : Retorno
     {
-        public string msg { get; set; }
-        public string erro { get; set; }
-        public bool status { get; set; }
-
-        public getVinculoAllRetornoLogin(string r_msg = "Processamento Realizado com Sucesso.", string r_erro = "", bool r_status = true)
-        {
-            this.msg = r_msg;
-            this.erro = r_erro;
-            this.status = r_status;
-        }
-
         public List<Vinculo> ListaVinculo { get; set; }
     }
 
-    public class getVinculoRetornoLogin
+    public class getVinculoRetornoLogin : Retorno
     {
-        public string msg { get; set; }
-        public string erro { get; set; }
-        public bool status { get; set; }
-
-        public getVinculoRetornoLogin(string r_msg = "Processamento Realizado com Sucesso.", string r_erro = "", bool r_status = true)
-        {
-            this.msg = r_msg;
-            this.erro = r_erro;
-            this.status = r_status;
-        }
-
         public Object Vinculo { get; set; }
     }
 
-    public class getConsultaCustomizadaRetorno
+    public class getConsultaCustomizadaRetorno : Retorno
     {
-        public string msg { get; set; }
-        public string erro { get; set; }
-        public bool status { get; set; }
-
-        public getConsultaCustomizadaRetorno(string r_msg = "Processamento Realizado com Sucesso.", string r_erro = "", bool r_status = true)
-        {
-            this.msg = r_msg;
-            this.erro = r_erro;
-            this.status = r_status;
-        }
         public Object Consulta { get; set; }
     }
 
-    public class getCustomizacaoRetorno
+    public class getCustomizacaoRetorno : Retorno
     {
-        public string msg { get; set; }
-        public string erro { get; set; }
-        public bool status { get; set; }
-
-        public getCustomizacaoRetorno(string r_msg = "Processamento Realizado com Sucesso.", string r_erro = "", bool r_status = true)
-        {
-            this.msg = r_msg;
-            this.erro = r_erro;
-            this.status = r_status;
-        }
         public List<Dictionary<string, string>> listaConsulta { get; set; }
+    }
+
+    public class getAllEmpresaRetorno : Retorno
+    {
+        public List<Dictionary<string, string>> listaEmpresa { get; set; }
     }
 }
