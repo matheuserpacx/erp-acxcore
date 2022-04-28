@@ -173,16 +173,15 @@ namespace API.Models
                 string nome = item.Name;
                 object valor = item.GetValue(emp, null);
 
+                if (valor == null)
+                    continue;
+
                 if (!String.IsNullOrEmpty(valor.ToString()))
                 {
                     var newvalor = (item.PropertyType == typeof(string)) ? valor = $"'{valor}'" : valor;
 
                     into += (into.Length > 0) ? $", {nome}" : nome;
                     values += (values.Length > 0) ? $", {newvalor}" : newvalor;
-                }
-                else
-                {
-                    continue;
                 }
             }
 
@@ -200,6 +199,9 @@ namespace API.Models
             {
                 string nome = item.Name;
                 object valor = item.GetValue(emp, null);
+
+                if (valor == null)
+                    continue;
 
                 if (!String.IsNullOrEmpty(valor.ToString()))
                 {
@@ -392,7 +394,6 @@ namespace API.Models
         {
             DB connInsert = new DB();
             bool status = true;
-
             try
             {
                 if (connInsert.Open())
